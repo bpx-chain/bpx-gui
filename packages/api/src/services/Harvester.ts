@@ -40,6 +40,23 @@ export default class Harvester extends Service {
       dirname,
     });
   }
+  
+  async getHarvesterConfig() {
+    return this.command('get_harvester_config');
+  }
+
+  async updateHarvesterConfig(args: {
+    useGpuHarvesting?: boolean;
+    gpuIndex?: number;
+    enforceGpuIndex?: boolean;
+    disableCpuAffinity?: boolean;
+    parallelDecompressorCount?: number;
+    decompressorThreadCount?: number;
+    recursivePlotScan?: boolean;
+    refreshParameterIntervalSeconds?: number;
+  }) {
+    return this.command('update_harvester_config', args);
+  }
 
   onRefreshPlots(callback: (data: any, message: Message) => void, processData?: (data: any) => any) {
     return this.onCommand('refresh_plots', callback, processData);

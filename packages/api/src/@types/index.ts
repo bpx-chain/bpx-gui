@@ -21,3 +21,4 @@ export type { default as Plotter, PlotterMap } from './Plotter';
 export type { default as Point } from './Point';
 export type { default as ProofsOfSpace } from './ProofsOfSpace';
 export type { default as SignagePoint } from './SignagePoint';
+export type { default as HarvesterConfig } from './HarvesterConfig';

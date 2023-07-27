@@ -5,13 +5,16 @@ import React from 'react';
 import { Routes, Route, matchPath, useLocation, useNavigate } from 'react-router-dom';
 
 import SettingsGeneral from './SettingsGeneral';
+import SettingsHarvester from './SettingsHarvester';
 
 enum SettingsTab {
   GENERAL = 'general',
+  HARVESTER = 'harvester',
 }
 
 const SettingsTabsPathMapping = {
   [SettingsTab.GENERAL]: '/dashboard/settings/general',
+  [SettingsTab.HARVESTER]: '/dashboard/settings/harvester',
 };
 
 export default function Settings() {
@@ -44,10 +47,12 @@ export default function Settings() {
             indicatorColor="primary"
           >
             <Tab value={SettingsTab.GENERAL} label={<Trans>General</Trans>} data-testid="Settings-tab-general" />
+            <Tab value={SettingsTab.HARVESTER} label={<Trans>Harvester</Trans>} data-testid="Settings-tab-harvester" />
           </Tabs>
 
           <Routes>
             <Route path="general" element={<SettingsGeneral />} />
+            <Route path="harvester" element={<SettingsHarvester />} />
           </Routes>
         </Flex>
       </Flex>
