@@ -211,4 +211,6 @@ export const {
   useGetPlotDirectoriesQuery,
   useAddPlotDirectoryMutation,
   useRemovePlotDirectoryMutation,
+  useGetHarvesterConfigQuery,
+  useUpdateHarvesterConfigMutation,
 } = harvesterApi;

@@ -86,6 +86,8 @@ export const {
   useGetPlotDirectoriesQuery,
   useAddPlotDirectoryMutation,
   useRemovePlotDirectoryMutation,
+  useGetHarvesterConfigQuery,
+  useUpdateHarvesterConfigMutation,
 } = harvester;
 
 // plotter hooks
