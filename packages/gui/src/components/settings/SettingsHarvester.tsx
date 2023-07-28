@@ -152,8 +152,6 @@ export default function SettingsHarvester() {
       setMessage(<Trans>Failed to update Harvester config</Trans>);
     };
     
-    console.log("configUpdateRequests");
-    console.log(configUpdateRequests);
     await updateHarvesterConfig({
       useGpuHarvesting: configUpdateRequests.useGpuHarvesting ?? undefined,
       gpuIndex: configUpdateRequests.gpuIndex ?? undefined,

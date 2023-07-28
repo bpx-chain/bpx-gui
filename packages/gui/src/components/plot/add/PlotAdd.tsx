@@ -6,7 +6,6 @@ import PlotAddForm from './PlotAddForm';
 
 export default function PlotAdd() {
   const { data: plotters, isLoading: isLoadingPlotters } = useGetPlottersQuery();
-  console.log(plotters);
   const { data: fingerprints, isLoading: isLoadingPublicKeys, error, refetch } = useGetKeysQuery();
 
   const isLoading = isLoadingPlotters || isLoadingPublicKeys;
