@@ -55,6 +55,8 @@ export default class Harvester extends Service {
     recursivePlotScan?: boolean;
     refreshParameterIntervalSeconds?: number;
   }) {
+    console.log("updateHarvesterConfig");
+    console.log(args);
     return this.command('update_harvester_config', args);
   }
 
