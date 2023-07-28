@@ -367,6 +367,7 @@ export default class Client extends EventEmitter {
   };
 
   async send(message: Message, timeout?: number, disableFormat?: boolean): Promise<Message> {
+    console.log(message);
     const {
       connected,
       options: { timeout: defaultTimeout, camelCase },
