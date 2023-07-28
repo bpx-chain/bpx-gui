@@ -58,6 +58,8 @@ export default function PlotAddForm(props: Props) {
   };
 
   const defaultsForPlotter = (plotterName: PlotterName) => {
+    console.log(plotters);
+    console.log(plotterName);
     const plotterDefaults = plotters[plotterName]?.defaults ?? defaultPlotter.defaults;
     const { plotSize } = plotterDefaults;
     const maxRam = plottingInfo[plotterName].find((element) => element.value === plotSize)?.defaultRam;
