@@ -207,9 +207,9 @@ export default class Daemon extends Service {
     // bladebitDiskNoT2Direct
     if (bbdisk_no_t2_direct) args.no_t2_direct = bbdisk_no_t2_direct;
     // bladebitDeviceIndex
-    if (bb_device_index) args.device_index = bb_device_index;
+    if (bbcuda_device_index) args.device_index = bbcuda_device_index;
     // bladebitDisableDirectDownloads
-    if (bb_disable_direct_downloads) args.disable_direct_downloads = bb_disable_direct_downloads;
+    if (bbcuda_disable_direct_downloads) args.disable_direct_downloads = bbcuda_disable_direct_downloads;
 
     return this.command('start_plotting', args, undefined, undefined, true);
   }
