@@ -45,7 +45,7 @@ export default class Harvester extends Service {
     return this.command('get_harvester_config');
   }
 
-  async updateHarvesterConfig(args: {
+  async updateHarvesterConfig(
     useGpuHarvesting?: boolean;
     gpuIndex?: number;
     enforceGpuIndex?: boolean;
@@ -54,10 +54,19 @@ export default class Harvester extends Service {
     decompressorThreadCount?: number;
     recursivePlotScan?: boolean;
     refreshParameterIntervalSeconds?: number;
-  }) {
+  ) {
     console.log("updateHarvesterConfig");
     console.log(args);
-    return this.command('update_harvester_config', args);
+    return this.command('update_harvester_config', {
+      useGpuHarvesting,
+      gpuIndex,
+      enforceGpuIndex,
+      disableCpuAffinity,
+      parallelDecompressorCount,
+      decompressorThreadCount,
+      recursivePlotScan,
+      refreshParameterIntervalSeconds,
+    });
   }
 
   onRefreshPlots(callback: (data: any, message: Message) => void, processData?: (data: any) => any) {
