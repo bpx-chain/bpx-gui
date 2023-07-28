@@ -46,14 +46,14 @@ export default class Harvester extends Service {
   }
 
   async updateHarvesterConfig(
-    useGpuHarvesting?: boolean;
-    gpuIndex?: number;
-    enforceGpuIndex?: boolean;
-    disableCpuAffinity?: boolean;
-    parallelDecompressorCount?: number;
-    decompressorThreadCount?: number;
-    recursivePlotScan?: boolean;
-    refreshParameterIntervalSeconds?: number;
+    useGpuHarvesting?: boolean,
+    gpuIndex?: number,
+    enforceGpuIndex?: boolean,
+    disableCpuAffinity?: boolean,
+    parallelDecompressorCount?: number,
+    decompressorThreadCount?: number,
+    recursivePlotScan?: boolean,
+    refreshParameterIntervalSeconds?: number
   ) {
     console.log("updateHarvesterConfig");
     console.log(args);
