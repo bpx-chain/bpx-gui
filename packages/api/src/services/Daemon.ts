@@ -137,6 +137,7 @@ export default class Daemon extends Service {
     bb_disable_numa?: boolean, // bladebitDisableNUMA,
     bb_warm_start?: boolean, // bladebitWarmStart,
     bb_no_cpu_affinity?: boolean, // bladebitNoCpuAffinity
+    bb_compression_level?: number, // bladebitCompressionLevel
     bbdisk_cache?: number, // bladebitDiskCache
     bbdisk_f1_threads?: number, // bladebitDiskF1Threads
     bbdisk_fp_threads?: number, // bladebitDiskFpThreads
@@ -145,7 +146,9 @@ export default class Daemon extends Service {
     bbdisk_p3_threads?: number, // bladebitDiskP3Threads
     bbdisk_alternate?: boolean, // bladebitDiskAlternate
     bbdisk_no_t1_direct?: boolean, // bladebitDiskNoT1Direct
-    bbdisk_no_t2_direct?: boolean // bladebitDiskNoT2Direct
+    bbdisk_no_t2_direct?: boolean, // bladebitDiskNoT2Direct
+    bbcuda_device_index?: boolean, // bladebitDeviceIndex
+    bbcuda_disable_direct_downloads?: boolean, // bladebitDisableDirectDownloads
   ) {
     const args: Record<string, unknown> = {
       service: ServiceName.PLOTTER,
@@ -183,6 +186,8 @@ export default class Daemon extends Service {
     if (bb_warm_start) args.w = bb_warm_start;
     // bladebitNoCpuAffinity
     if (bb_no_cpu_affinity) args.no_cpu_affinity = bb_no_cpu_affinity;
+    // bladebitCompressionLevel
+    if (bb_compression_level) args.compression_level = bb_compression_level;
     // bladebitDiskCache
     if (bbdisk_cache) args.cache = `${bbdisk_cache}G`;
     // bladebitDiskF1Threads
@@ -201,6 +206,10 @@ export default class Daemon extends Service {
     if (bbdisk_no_t1_direct) args.no_t1_direct = bbdisk_no_t1_direct;
     // bladebitDiskNoT2Direct
     if (bbdisk_no_t2_direct) args.no_t2_direct = bbdisk_no_t2_direct;
+    // bladebitDeviceIndex
+    if (bb_device_index) args.device_index = bb_device_index;
+    // bladebitDisableDirectDownloads
+    if (bb_disable_direct_downloads) args.disable_direct_downloads = bb_disable_direct_downloads;
 
     return this.command('start_plotting', args, undefined, undefined, true);
   }
