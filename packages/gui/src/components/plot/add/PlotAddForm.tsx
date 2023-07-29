@@ -54,7 +54,6 @@ export default function PlotAddForm(props: Props) {
     workspaceLocation: '',
     workspaceLocation2: '',
     excludeFinalDir: false,
-    fingerprint: fingerprints[0].fingerprint,
   };
 
   const defaultsForPlotter = (plotterName: PlotterName) => {

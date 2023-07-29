@@ -122,7 +122,6 @@ export default class Daemon extends Service {
     u: number, // numBuckets
     r: number, // numThreads,
     queue: string, // queue
-    a: number | undefined, // fingerprint
     parallel: boolean, // parallel
     delay: number, // delay
     e?: boolean, // disableBitfieldPlotting
@@ -169,7 +168,6 @@ export default class Daemon extends Service {
       overrideK,
     };
 
-    if (a) args.a = a;
     if (f) args.f = f;
     if (p) args.p = p;
     // madmaxNumBucketsPhase3
