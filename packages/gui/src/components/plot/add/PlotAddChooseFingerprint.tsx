@@ -2,6 +2,7 @@ import { CardStep, Select, StateColor, TextField } from '@bpx-network/core';
 import { t, Trans } from '@lingui/macro';
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Typography } from '@mui/material';
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 
 type Props = {
   step: number;
@@ -10,8 +11,21 @@ type Props = {
 
 export default function PlotAddChooseFingerprint(props: Props) {
   const { step, fingerprints } = props;
+  const { watch, setValue } = useFormContext();
+
+  const fp = watch('fingerprint');
+  const manualSetup = (fp == null);
   
-  const manualSetup = false;
+  React.useEffect(() => {
+    if(!manualSetup) {
+        setValue('farmerPublicKey', fingerprints[fp].farmerPk);
+        setValue('poolPublicKey', fingerprints[fp].poolPk);
+    }
+    else {
+        setValue('farmerPublicKey', '');
+        setValue('poolPublicKey', '');
+    }
+  }, [fp]);
 
   return (
     <CardStep step={step} title={<Trans>Choose Fingerprint</Trans>}>
