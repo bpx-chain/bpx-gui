@@ -6,6 +6,7 @@ export default function useBeaconState(): {
   isLoading: boolean;
   state?: BeaconState;
   error?: Error;
+  ecGood?: boolean;
 } {
   const {
     data: blockchainState,
@@ -19,6 +20,8 @@ export default function useBeaconState(): {
   );
   const blockchainSynced = blockchainState?.sync?.synced;
   const blockchainSynching = blockchainState?.sync?.syncMode;
+  const ecConnected = blockchainState?.ecConn;
+  const ecSynced = blockchainState?.sync?.ecSynced;
 
   let state: BeaconState;
   if (blockchainSynching) {
@@ -33,5 +36,6 @@ export default function useBeaconState(): {
     isLoading,
     state,
     error,
+    ecConnected && ecSynced,
   };
 }

@@ -6,7 +6,7 @@ import BeaconState from '../constants/BeaconState';
 import useBeaconState from './useBeaconState';
 
 export default function useFarmerStatus(): FarmerStatus {
-  const { state: beaconState, isLoading: isLoadingBeaconState } = useBeaconState();
+  const { state: beaconState, isLoading: isLoadingBeaconState, ecGood: ecGood } = useBeaconState();
 
   const { isRunning, isLoading: isLoadingIsRunning } = useService(ServiceName.FARMER);
 
@@ -16,7 +16,7 @@ export default function useFarmerStatus(): FarmerStatus {
     return FarmerStatus.SYNCHING;
   }
 
-  if (beaconState === BeaconState.ERROR) {
+  if (beaconState === BeaconState.ERROR || !ecGood) {
     return FarmerStatus.NOT_AVAILABLE;
   }
 
