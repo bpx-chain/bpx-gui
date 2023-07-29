@@ -24,7 +24,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
       </Typography>
 
       <Grid container>
-        <Grid xs={12} sm={10} md={8} lg={6} item>
+        <Grid xs={12} sm={10} md={8} lg={6} space={2} item>
           <FormControl variant="filled" fullWidth>
             <InputLabel required focused>
               <Trans>Fingerprint</Trans>
@@ -44,10 +44,10 @@ export default function PlotAddChooseFingerprint(props: Props) {
                 </MenuItem>
               ))}
               <MenuItem
-                value={null}
+                value={<Trans>Manual setup</Trans>}
                 key={null}
               >
-                Manual setup
+                <Trans>Manual setup</Trans>
               </MenuItem>
             </Select>
           </FormControl>
