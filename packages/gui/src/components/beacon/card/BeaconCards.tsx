@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import BeaconCardConnectionStatus from './BeaconCardConnectionStatus';
+import BeaconCardExecution from './BeaconCardExecution';
 import BeaconCardDifficulty from './BeaconCardDifficulty';
 import BeaconCardNetworkName from './BeaconCardNetworkName';
 import BeaconCardPeakHeight from './BeaconCardPeakHeight';
@@ -19,7 +19,7 @@ export default function BeaconCards() {
           <BeaconCardStatus />
         </Grid>
         <Grid xs={12} sm={6} md={4} item>
-          <BeaconCardConnectionStatus />
+          <BeaconCardExecution />
         </Grid>
         <Grid xs={12} sm={6} md={4} item>
           <BeaconCardNetworkName />
