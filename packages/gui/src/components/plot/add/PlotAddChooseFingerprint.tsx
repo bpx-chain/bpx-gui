@@ -10,7 +10,6 @@ type Props = {
 
 export default function PlotAddChooseFingerprint(props: Props) {
   const { step, fingerprints } = props;
-  console.log(fingerprints);
   
   const manualSetup = false;
 
