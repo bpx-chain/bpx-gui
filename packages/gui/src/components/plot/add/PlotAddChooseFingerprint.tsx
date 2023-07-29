@@ -16,14 +16,15 @@ export default function PlotAddChooseFingerprint(props: Props) {
   const fp = watch('fingerprint');
   const manualSetup = (fp == null);
   
-  console.log(fp);
-  console.log(manualSetup);
-  console.log(fingerprints);
-  
   React.useEffect(() => {
     if(!manualSetup) {
-        setValue('farmerPublicKey', fingerprints[fp].farmerPk);
-        setValue('poolPublicKey', fingerprints[fp].poolPk);
+      for(const fingerprint of fingerprints) {
+        if(fingerprint.fingerprint == fp) {
+          setValue('farmerPublicKey', fingerprint.farmerPk);
+          setValue('poolPublicKey', fingerprint.poolPk);
+          break;
+        }
+      }
     }
     else {
         setValue('farmerPublicKey', '');
