@@ -443,28 +443,6 @@ export default function PlotAddNumberOfPlots(props: Props) {
                 />
               </FormControl>
             </Grid>
-          </Grid>
-          <Grid xs={12} item>
-            <FormControl variant="filled" fullWidth>
-              <TextField
-                name="farmerPublicKey"
-                type="text"
-                variant="filled"
-                placeholder="Hex farmer public key"
-                label={<Trans>Farmer Public Key</Trans>}
-              />
-            </FormControl>
-          </Grid>
-          <Grid xs={12} item>
-            <FormControl variant="filled" fullWidth>
-              <TextField
-                name="poolPublicKey"
-                type="text"
-                variant="filled"
-                placeholder="Hex public key of pool"
-                label={<Trans>Pool Public Key</Trans>}
-              />
-            </FormControl>
             {op.haveBladebitDisableDirectDownloads && (
               <Grid xs={12} sm={4} item>
                 <FormControl variant="filled" fullWidth>

@@ -1,4 +1,4 @@
-import { CardStep, Select, StateColor } from '@bpx-network/core';
+import { CardStep, Select, StateColor, TextField } from '@bpx-network/core';
 import { t, Trans } from '@lingui/macro';
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Typography } from '@mui/material';
 import React from 'react';
@@ -11,6 +11,8 @@ type Props = {
 export default function PlotAddChooseFingerprint(props: Props) {
   const { step, fingerprints } = props;
   console.log(fingerprints);
+  
+  const manualSetup = false;
 
   return (
     <CardStep step={step} title={<Trans>Choose Fingerprint</Trans>}>
@@ -41,7 +43,37 @@ export default function PlotAddChooseFingerprint(props: Props) {
                   )}
                 </MenuItem>
               ))}
+              <MenuItem
+                value={null}
+                key={null}
+              >
+                Manual setup
+              </MenuItem>
             </Select>
+          </FormControl>
+        </Grid>
+        <Grid xs={12} item>
+          <FormControl variant="filled" fullWidth>
+            <TextField
+              name="farmerPublicKey"
+              type="text"
+              variant="filled"
+              placeholder="Hex farmer public key"
+              label={<Trans>Farmer Public Key</Trans>}
+              disabled={!manualSetup}
+            />
+          </FormControl>
+        </Grid>
+        <Grid xs={12} item>
+          <FormControl variant="filled" fullWidth>
+            <TextField
+              name="poolPublicKey"
+              type="text"
+              variant="filled"
+              placeholder="Hex public key of pool"
+              label={<Trans>Pool Public Key</Trans>}
+              disabled={!manualSetup}
+            />
           </FormControl>
         </Grid>
       </Grid>
