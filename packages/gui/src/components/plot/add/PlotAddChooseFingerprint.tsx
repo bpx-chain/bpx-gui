@@ -42,7 +42,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
       </Typography>
 
       <Grid container>
-        <Grid xs={12} sm={10} md={8} lg={6} space={2} item>
+        <Grid xs={12} sm={10} md={8} lg={6} spacing={2} item>
           <FormControl variant="filled" fullWidth>
             <InputLabel required focused>
               <Trans>Fingerprint</Trans>
