@@ -53,7 +53,7 @@ export default function BeaconCardExecution() {
     return <CardSimple loading title={<Trans>Execution Client</Trans>} />;
   }
 
-  const { value, tooltip, color } = getData(state?.sync);
+  const { value, tooltip, color } = getData(state?.ec_conn, state?.sync.ec_synced);
 
   return <CardSimple valueColor={color} title={<Trans>Execution Client</Trans>} tooltip={tooltip} value={value} error={error} />;
 }
