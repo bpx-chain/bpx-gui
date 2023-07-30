@@ -202,8 +202,10 @@ export default class Daemon extends Service {
 
     // some keys must be provided as empty strings and some must not be provided at all
     if (outputArgs.p === '') delete outputArgs.p;
+    
+    console.log(outputArgs);
 
-    return this.command<{ ids: string[] }>('start_plotting', outputArgs, undefined, undefined, true);
+    return this.command('start_plotting', outputArgs, undefined, undefined, true);
   }
 
   exit() {
