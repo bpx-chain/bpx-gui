@@ -11,9 +11,9 @@ const StyledWarning = styled.span`
 function getData(conn, synced) {
   if (!conn) {
     return {
-      value: <Trans>Not connected</Trans>,
+      value: <Trans>Offline</Trans>,
       color: 'error',
-      tooltip: <Trans>Execution Client is not connected</Trans>,
+      tooltip: <Trans>Execution Client is not responding</Trans>,
     };
   }
 
@@ -26,7 +26,7 @@ function getData(conn, synced) {
       ),
       color: 'error',
       tooltip: (
-        <Trans>Execution Client is still syncing</Trans>
+        <Trans>Execution Client is syncing</Trans>
       ),
     };
   }
