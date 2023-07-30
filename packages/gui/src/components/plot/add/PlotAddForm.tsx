@@ -99,11 +99,22 @@ export default function PlotAddForm(props: Props) {
   const handleSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       setLoading(true);
-      const { delay, farmerPublicKey, poolPublicKey, ...rest } = data;
+      const {
+          delay,
+          plotterName: formPlotterName,
+          workspaceLocation,
+          workspaceLocation2,
+          farmerPublicKey,
+          poolPublicKey,
+          ...rest
+      } = data;
 
       const plotAddConfig = {
         ...rest,
         delay: delay * 60,
+        plotterName: formPlotterName,
+        workspaceLocation,
+        workspaceLocation2: formPlotterName === 'madmax' ? workspaceLocation2 || workspaceLocation : workspaceLocation2,
         farmerPublicKey: farmerPublicKey.startsWith('0x') ? farmerPublicKey.slice(2) : farmerPublicKey,
         poolPublicKey: poolPublicKey.startsWith('0x') ? poolPublicKey.slice(2) : poolPublicKey,
       };
