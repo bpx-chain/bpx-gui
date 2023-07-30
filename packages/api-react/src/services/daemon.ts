@@ -331,6 +331,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
       transformResponse: (response: any) => response?.success,
       // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
     }),
+    
     startPlotting: build.mutation<boolean, PlotAdd>({
       query: ({
         bladebitDisableNUMA,
@@ -373,7 +374,6 @@ export const daemonApi = apiWithTag.injectEndpoints({
         command: 'startPlotting',
         service: Daemon,
         args: [
-          inputArgs: {
             bladebitDisableNUMA,
             bladebitWarmStart,
             bladebitNoCpuAffinity,
@@ -410,7 +410,6 @@ export const daemonApi = apiWithTag.injectEndpoints({
             queue,
             workspaceLocation,
             workspaceLocation2,
-          }
         ],
       }),
       transformResponse: (response: any) => response?.success,
