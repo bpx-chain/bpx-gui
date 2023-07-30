@@ -97,11 +97,13 @@ export default function PlotAddForm(props: Props) {
   const handleSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       setLoading(true);
-      const { delay, ...rest } = data;
+      const { delay, farmerPublicKey, poolPublicKey, ...rest } = data;
 
       const plotAddConfig = {
         ...rest,
         delay: delay * 60,
+        farmerPublicKey: farmerPublicKey.startsWith('0x') ? farmerPublicKey.slice(2) : farmerPublicKey,
+        poolPublicKey: poolPublicKey.startsWith('0x') ? poolPublicKey.slice(2) : poolPublicKey,
       };
 
       await startPlotting(plotAddConfig).unwrap();
