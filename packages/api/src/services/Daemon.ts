@@ -154,8 +154,6 @@ export default class Daemon extends Service {
       plotter: plotterName.startsWith('bladebit') ? 'bladebit' : plotterName,
       k,
       n,
-      t,
-      t2,
       d,
       b,
       u,
@@ -168,6 +166,8 @@ export default class Daemon extends Service {
       overrideK,
     };
 
+    if (t) args.t = t;
+    if (t2) args.t2 = t2;
     if (f) args.f = f;
     if (p) args.p = p;
     // madmaxNumBucketsPhase3
