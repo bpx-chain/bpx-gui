@@ -63,7 +63,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
                 </MenuItem>
               ))}
               <MenuItem
-                value={<Trans>Manual setup</Trans>}
+                value={null}
                 key={null}
               >
                 <Trans>Manual setup</Trans>
