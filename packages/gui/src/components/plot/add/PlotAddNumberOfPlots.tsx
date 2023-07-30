@@ -447,7 +447,7 @@ export default function PlotAddNumberOfPlots(props: Props) {
               <Grid xs={12} sm={4} item>
                 <FormControl variant="filled" fullWidth>
                   <FormControlLabel
-                    control={<Checkbox name="disableDirectDownloads" />}
+                    control={<Checkbox name="bladebitDisableDirectDownloads" />}
                     label={
                       <>
                         <Trans>Disable direct download</Trans>{' '}
@@ -467,7 +467,7 @@ export default function PlotAddNumberOfPlots(props: Props) {
               <Grid xs={12} sm={12} item>
                 <FormControl variant="filled" fullWidth>
                   <TextField
-                    name="queue"
+                    name="bladebitDeviceIndex"
                     type="number"
                     variant="filled"
                     placeholder="default"
