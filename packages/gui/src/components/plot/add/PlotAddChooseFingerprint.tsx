@@ -14,6 +14,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
   const { watch, setValue } = useFormContext();
 
   const fp = watch('fingerprint');
+  console.log(fp);
   const manualSetup = (fp == null);
   
   React.useEffect(() => {
