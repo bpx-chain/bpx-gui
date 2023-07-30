@@ -372,7 +372,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
       }) => ({
         command: 'startPlotting',
         service: Daemon,
-          args: [
+        args: [{
           bladebitDisableNUMA,
           bladebitWarmStart,
           bladebitNoCpuAffinity,
@@ -409,7 +409,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
           queue,
           workspaceLocation,
           workspaceLocation2 || workspaceLocation,
-        ],
+        }],
       }),
       transformResponse: (response: any) => response?.success,
       // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
