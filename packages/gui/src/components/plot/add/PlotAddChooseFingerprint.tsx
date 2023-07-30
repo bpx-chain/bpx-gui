@@ -14,8 +14,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
   const { watch, setValue } = useFormContext();
 
   const fp = watch('fingerprint');
-  console.log(fp);
-  const manualSetup = (fp == null);
+  const manualSetup = (fp == 0);
   
   React.useEffect(() => {
     if(!manualSetup) {
@@ -63,8 +62,8 @@ export default function PlotAddChooseFingerprint(props: Props) {
                 </MenuItem>
               ))}
               <MenuItem
-                value={null}
-                key={null}
+                value={0}
+                key={0}
               >
                 <Trans>Manual setup</Trans>
               </MenuItem>
@@ -80,6 +79,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
               placeholder="Hex farmer public key"
               label={<Trans>Farmer Public Key</Trans>}
               disabled={!manualSetup}
+              required
             />
           </FormControl>
         </Grid>
@@ -92,6 +92,7 @@ export default function PlotAddChooseFingerprint(props: Props) {
               placeholder="Hex public key of pool"
               label={<Trans>Pool Public Key</Trans>}
               disabled={!manualSetup}
+              required
             />
           </FormControl>
         </Grid>
