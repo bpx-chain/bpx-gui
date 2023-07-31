@@ -132,6 +132,7 @@ export default class Daemon extends Service {
     excludeFinalDir?: boolean;
     farmerPublicKey?: string;
     finalLocation: string;
+    fingerprint?: number;
     madmaxNumBucketsPhase3?: number;
     madmaxTempToggle?: boolean;
     madmaxThreadMultiplier?: number;
