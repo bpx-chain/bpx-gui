@@ -119,7 +119,7 @@ export default function PlotAddForm(props: Props) {
         poolPublicKey: poolPublicKey.startsWith('0x') ? poolPublicKey.slice(2) : poolPublicKey,
       };
 
-      await startPlotting(plotAddConfig).unwrap();
+      await startPlotting({ plotAddConfig }).unwrap();
 
       navigate('/dashboard/plot');
     } catch (error) {

@@ -332,11 +332,16 @@ export const daemonApi = apiWithTag.injectEndpoints({
       // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
     }),
     
-    startPlotting: build.mutation<boolean, PlotAdd>({
-      query: (args) => ({
+    startPlotting: build.mutation<
+      boolean,
+      {
+        plotAddConfig: PlotAdd;
+      }
+    >({
+      query: ({ plotAddConfig }) => ({
         command: 'startPlotting',
         service: Daemon,
-        args,
+        args: [plotAddConfig],
       }),
       transformResponse: (response: any) => response?.success,
       // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
