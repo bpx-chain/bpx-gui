@@ -205,6 +205,8 @@ export default class Daemon extends Service {
 
     // some keys must be provided as empty strings and some must not be provided at all
     if (outputArgs.p === '') delete outputArgs.p;
+    if (outputArgs.t === '') delete outputArgs.t;
+    if (outputArgs.t2 === '') delete outputArgs.t2;
     
     console.log("api outputArgs");
     console.log(outputArgs);
