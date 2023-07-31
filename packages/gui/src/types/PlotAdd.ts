@@ -1,3 +1,5 @@
+import Fingerprint from './Fingerprint';
+
 type PlotAdd = {
   plotType?: 'ramplot' | 'diskplot';
   bladebitDisableNUMA?: boolean;
@@ -20,6 +22,7 @@ type PlotAdd = {
   excludeFinalDir?: boolean;
   farmerPublicKey?: string;
   finalLocation: string;
+  fingerprint?: Fingerprint;
   madmaxNumBucketsPhase3?: number;
   madmaxTempToggle?: boolean;
   madmaxThreadMultiplier?: number;
