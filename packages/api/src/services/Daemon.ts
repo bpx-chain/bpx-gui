@@ -169,7 +169,6 @@ export default class Daemon extends Service {
       excludeFinalDir: 'x',
       farmerPublicKey: 'f',
       finalLocation: 'd',
-      fingerprint: 'a',
       madmaxNumBucketsPhase3: 'v',
       madmaxTempToggle: 'G',
       madmaxThreadMultiplier: 'K',
