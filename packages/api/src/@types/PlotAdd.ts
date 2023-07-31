@@ -1,3 +1,5 @@
+import Fingerprint from './Fingerprint';
+
 type PlotAdd = {
   plotSize: number;
   plotCount: number;
@@ -10,6 +12,7 @@ type PlotAdd = {
   workspaceLocation2: string;
   parallel: boolean;
   delay: number;
+  fingerprint?: Fingerprint;
   disableBitfieldPlotting?: boolean;
   excludeFinalDir?: boolean;
   overrideK?: boolean;
