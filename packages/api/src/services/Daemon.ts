@@ -184,6 +184,9 @@ export default class Daemon extends Service {
       workspaceLocation: 't',
       workspaceLocation2: 't2',
     };
+    
+    console.log("api inputArgs");
+    console.log(inputArgs);
 
     const outputArgs: Record<string, unknown> = { service: ServiceName.PLOTTER };
 
@@ -203,6 +206,7 @@ export default class Daemon extends Service {
     // some keys must be provided as empty strings and some must not be provided at all
     if (outputArgs.p === '') delete outputArgs.p;
     
+    console.log("api outputArgs");
     console.log(outputArgs);
 
     return this.command('start_plotting', outputArgs, undefined, undefined, true);

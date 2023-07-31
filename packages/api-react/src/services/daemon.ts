@@ -333,7 +333,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
     }),
     
     startPlotting: build.mutation<boolean, PlotAdd>({
-      query: ({ args }) => ({
+      query: (args) => ({
         command: 'startPlotting',
         service: Daemon,
         args,
