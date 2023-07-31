@@ -184,9 +184,6 @@ export default class Daemon extends Service {
       workspaceLocation: 't',
       workspaceLocation2: 't2',
     };
-    
-    console.log("api inputArgs");
-    console.log(inputArgs);
 
     const outputArgs: Record<string, unknown> = { service: ServiceName.PLOTTER };
 
@@ -208,7 +205,6 @@ export default class Daemon extends Service {
     if (outputArgs.t === '') delete outputArgs.t;
     if (outputArgs.t2 === '') delete outputArgs.t2;
     
-    console.log("api outputArgs");
     console.log(outputArgs);
 
     return this.command('start_plotting', outputArgs, undefined, undefined, true);
