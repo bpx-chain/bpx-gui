@@ -204,6 +204,8 @@ export default class Daemon extends Service {
     if (outputArgs.p === '') delete outputArgs.p;
     if (outputArgs.t === '') delete outputArgs.t;
     if (outputArgs.t2 === '') delete outputArgs.t2;
+
+    delete outputArgs.fingerprint; // Use farmer + pool pk instead
     
     console.log(outputArgs);
 
