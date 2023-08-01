@@ -1,4 +1,4 @@
-import { Flex, LayoutDashboardSub } from '@bpx-network/core';
+import { Flex, LayoutDashboardSub, Mode, useMode } from '@bpx-network/core';
 import { Trans } from '@lingui/macro';
 import { Typography, Tab, Tabs } from '@mui/material';
 import React from 'react';
@@ -18,6 +18,7 @@ const SettingsTabsPathMapping = {
 };
 
 export default function Settings() {
+  const [mode] = useMode();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -47,7 +48,9 @@ export default function Settings() {
             indicatorColor="primary"
           >
             <Tab value={SettingsTab.GENERAL} label={<Trans>General</Trans>} data-testid="Settings-tab-general" />
-            <Tab value={SettingsTab.HARVESTER} label={<Trans>Harvester</Trans>} data-testid="Settings-tab-harvester" />
+            {mode == Mode.FARMING &&
+              <Tab value={SettingsTab.HARVESTER} label={<Trans>Harvester</Trans>} data-testid="Settings-tab-harvester" />
+            }
           </Tabs>
 
           <Routes>
