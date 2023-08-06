@@ -51,7 +51,10 @@ export default function FarmCardExpectedTimeToWin() {
   return (
     <CardSimple
       title={<Trans>Estimated Time to Win</Trans>}
-      value={`${expectedTimeToWin}`}
+      value={
+        !totalNetworkSpace.isZero() ? `${expectedTimeToWin}`
+                                    : <Trans>Unknown</Trans>
+      }
       tooltip={
         <Trans>
           You have {(proportion * 100).toFixed(4)}% of the space on the network, so farming a block will take{' '}
