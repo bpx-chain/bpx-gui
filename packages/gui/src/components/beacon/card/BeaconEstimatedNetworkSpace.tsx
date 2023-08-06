@@ -13,7 +13,10 @@ export default function BeaconEstimatedNetworkSpace() {
       valueColor="textPrimary"
       title={<Trans>Estimated Network Space</Trans>}
       tooltip={<Trans>Estimated sum of all the plotted disk space of all farmers in the network</Trans>}
-      value={value && <FormatBytes value={value} precision={3} />}
+      value={
+        value ? <FormatBytes value={value} precision={3} />
+              : <Trans>Unknown</Trans>
+      }
       error={error}
     />
   );
