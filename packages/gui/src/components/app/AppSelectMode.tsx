@@ -61,7 +61,7 @@ export default function AppSelectMode() {
                     </Box>
 
                     <Typography variant="h5" align="center">
-                      <Trans>Node</Trans>
+                      <Trans>Node Mode</Trans>
                     </Typography>
                   </Flex>
 
@@ -105,7 +105,7 @@ export default function AppSelectMode() {
                     <Flex gap={1} alignItems="center">
                       <StyledCheckIcon color="primary" />
                       <Typography variant="body2">
-                        <Trans>Node</Trans>
+                        <Trans>Node Mode</Trans>
                       </Typography>
                       <BeaconIcon fontSize="small" />
                     </Flex>
