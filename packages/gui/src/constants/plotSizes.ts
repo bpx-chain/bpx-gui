@@ -59,13 +59,13 @@ export function getPlotSizeOptions(plotterName: PlotterName, compressionLevel?: 
     ) {
       return {
         value: kSize,
-        label: `k=${kSize} (Effective plot size: ${item.effectivePlotSize}, Temporary space: ${item.workspace})`,
+        label: `k=${kSize} (Effective plot size: ${item.label}, Temporary space: ${item.workspace})`,
       };
     }
     const compressedSize = compressedSizes[compressionLevel][kSize];
     return {
       value: kSize,
-      label: `k=${kSize} (Effective plot size: ${item.effectivePlotSize}, Compressed plot size: ${compressedSize})`,
+      label: `k=${kSize} (Effective plot size: ${item.label}, Compressed plot size: ${compressedSize})`,
     };
   });
 }

@@ -349,8 +349,12 @@ export default function SettingsHarvester() {
   }, [data, isLoading, onClickRestartHarvester, isProcessing, isRestartRequired, isStarting, isStopping, isUpdating]);
 
   const compressionOptionStyle = React.useMemo(
-    () => (configUpdateRequests.parallelDecompressorCount === 0 ? { display: 'none' } : undefined),
-    [configUpdateRequests]
+    () =>
+      (configUpdateRequests.parallelDecompressorCount === null && (isLoading || data.parallelDecompressorCount === 0)) ||
+      configUpdateRequests.parallelDecompressorCount === 0
+        ? { display: 'none' }
+        : undefined,
+    [configUpdateRequests, data, isLoading]
   );
 
   const gpuOptionStyle = React.useMemo(
@@ -358,10 +362,11 @@ export default function SettingsHarvester() {
       !plotters ||
       !plotters.bladebit_cuda ||
       !plotters.bladebit_cuda.installInfo.cudaSupport ||
+      (configUpdateRequests.parallelDecompressorCount === null && (isLoading || data.parallelDecompressorCount === 0)) ||
       configUpdateRequests.parallelDecompressorCount === 0
         ? { display: 'none' }
         : undefined,
-    [configUpdateRequests, plotters]
+    [configUpdateRequests, plotters, data, isLoading]
   );
 
   return (
