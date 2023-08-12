@@ -6,6 +6,8 @@ interface CommonOptions {
   canDelayParallelPlots: boolean;
   canSetBufferSize: boolean;
   haveTempDir: boolean;
+  haveTempDir2: boolean;
+  isTempDirRequired: boolean;
 }
 
 interface BladeBitRamOptions extends CommonOptions {
