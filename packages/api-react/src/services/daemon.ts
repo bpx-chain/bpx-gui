@@ -238,6 +238,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
             installed,
             canInstall,
             bladebitMemoryWarning,
+            cudaSupport,
           } = plotters[plotterName];
 
           if (!plotterName.startsWith('bladebit')) {
@@ -297,7 +298,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
               bladebitMemoryWarning,
             },
           };
-          if (majorVersion === 3) {
+          if (cudaSupport) {
             const bbCuda = PlotterName.BLADEBIT_CUDA;
             availablePlotters[bbCuda] = {
               displayName,
@@ -308,6 +309,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
                 installed,
                 canInstall,
                 bladebitMemoryWarning,
+                cudaSupport,
               },
             };
           }

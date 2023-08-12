@@ -97,6 +97,7 @@ type PlotterInstallInfo = {
   installed: boolean;
   canInstall?: boolean;
   bladebitMemoryWarning?: string;
+  cudaSupport?: boolean;
 };
 
 type Plotter = {

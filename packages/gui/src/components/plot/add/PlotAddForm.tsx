@@ -14,7 +14,6 @@ import PlotAddChoosePlotter from './PlotAddChoosePlotter';
 import PlotAddChooseSize from './PlotAddChooseSize';
 import PlotAddNumberOfPlots from './PlotAddNumberOfPlots';
 import PlotAddSelectFinalDirectory from './PlotAddSelectFinalDirectory';
-import PlotAddSelectTemporaryDirectory from './PlotAddSelectTemporaryDirectory';
 import PlotAddChooseFingerprint from './PlotAddChooseFingerprint';
 
 type FormData = PlotAddConfig;
@@ -76,7 +75,7 @@ export default function PlotAddForm(props: Props) {
     defaultValues: defaultsForPlotter(PlotterName.CHIAPOS),
   });
 
-  const { watch, setValue, reset } = methods;
+  const { watch, setValue, reset, getValues } = methods;
   const plotterName = watch('plotterName') as PlotterName;
   const plotSize = watch('plotSize');
 
@@ -89,11 +88,16 @@ export default function PlotAddForm(props: Props) {
 
   const plotter = plotters[plotterName] ?? defaultPlotter;
   let step = 1;
-  const allowTempDirectorySelection: boolean = plotter.options.haveBladebitOutputDir === false;
 
   const handlePlotterChanged = (newPlotterName: PlotterName) => {
     const defaults = defaultsForPlotter(newPlotterName);
-    reset(defaults);
+    const formValues = getValues();
+    reset({
+        ...defaults,
+        fingerprint: formValues.fingerprint,
+        farmerPublicKey: formValues.farmerPublicKey,
+        poolPublicKey: formValues.poolPublicKey,
+    });
   };
 
   const handleSubmit: SubmitHandler<FormData> = async (data) => {
@@ -137,7 +141,6 @@ export default function PlotAddForm(props: Props) {
         <PlotAddChooseFingerprint step={step++} fingerprints={fingerprints} />
         <PlotAddChooseSize step={step++} plotter={plotter} />
         <PlotAddNumberOfPlots step={step++} plotter={plotter} />
-        {allowTempDirectorySelection && <PlotAddSelectTemporaryDirectory step={step++} plotter={plotter} />}
         <PlotAddSelectFinalDirectory step={step++} plotter={plotter} />
         <Flex justifyContent="flex-end">
           <ButtonLoading loading={loading} color="primary" type="submit" variant="contained">
