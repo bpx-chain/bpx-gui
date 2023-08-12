@@ -17,9 +17,6 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
   const { plotter } = props;
   const allowTempDir2Selection = plotter.options.haveTempDir2 === true;
   const isTempDirRequired = plotter.options.isTempDirRequired === true;
-  console.log(allowTempDir2Selection);
-  console.log(isTempDirRequired);
-  console.log('---');
   const selectDirectory = useSelectDirectory();
   const { setValue, watch } = useFormContext();
   const op = plotter.options;
@@ -103,7 +100,7 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
         </FormControl>
       )}
 
-      {allowTempDir2Selection || op.haveBladebitDiskNoT2Direct && (
+      {(allowTempDir2Selection || op.haveBladebitDiskNoT2Direct) && (
         <AdvancedOptions>
           {allowTempDir2Selection && (
             <Flex flexDirection="column" gap={2}>
