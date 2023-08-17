@@ -10,6 +10,10 @@ Var BpxSquirrelInstallLocation
 Var BpxSquirrelInstallVersion
 Var BpxSquirrelUninstaller
 Var CheckboxUninstall
+Var CheckboxLaunchOnExit
+Var CheckboxAddToPath
+Var LaunchOnExit
+Var AddToPath
 Var UninstallBpxSquirrelInstall
 Var BackButton
 Var NextButton
