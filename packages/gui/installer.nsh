@@ -98,7 +98,7 @@ Function finish
   ${NSD_CreateLabel} 0 65% 100% 10% "Advanced Options:"
   ${NSD_CreateCheckbox} 5% 75% 100% 10% "Add BPX Command Line executable to PATH"
   Pop $CheckboxAddToPath
-  ${NSD_SetState} $CheckboxAddToPath ${BST_UNCHECKED}
+  ${NSD_SetState} $CheckboxAddToPath ${BST_CHECKED}
   ${NSD_OnClick} $CheckboxAddToPath SetAddToPath
 
   GetDlgItem $NextButton $HWNDPARENT 1 ; 1 = Next button
