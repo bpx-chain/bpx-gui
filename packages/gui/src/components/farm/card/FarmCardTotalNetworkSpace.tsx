@@ -10,7 +10,10 @@ export default function FarmCardTotalNetworkSpace() {
   return (
     <CardSimple
       title={<Trans>Total Network Space</Trans>}
-      value={<FormatBytes value={totalNetworkSpace} precision={3} />}
+      value={
+        !totalNetworkSpace.isZero() ? <FormatBytes value={totalNetworkSpace} precision={3} />
+                                    : <Trans>Unknown</Trans>
+      }
       description={<Trans>Best estimate over last 24 hours</Trans>}
       loading={isLoading}
       error={error}
