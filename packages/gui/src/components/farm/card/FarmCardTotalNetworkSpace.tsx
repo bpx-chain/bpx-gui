@@ -5,14 +5,14 @@ import React from 'react';
 
 export default function FarmCardTotalNetworkSpace() {
   const { data, isLoading, error } = useGetBlockchainStateQuery();
-  const totalNetworkSpace = data?.space ?? 0;
+  const totalNetworkSpace = data?.space ?? null;
 
   return (
     <CardSimple
       title={<Trans>Total Network Space</Trans>}
       value={
-        !totalNetworkSpace.isZero() ? <FormatBytes value={totalNetworkSpace} precision={3} />
-                                    : <Trans>Unknown</Trans>
+        totalNetworkSpace !== null ? <FormatBytes value={totalNetworkSpace} precision={3} />
+                                   : <Trans>Unknown</Trans>
       }
       description={<Trans>Best estimate over last 24 hours</Trans>}
       loading={isLoading}
