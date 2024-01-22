@@ -1,6 +1,6 @@
 {
   "name": "@bpx-chain/core",
-  "author": "BPX Network <hello@bpxchain.cc> (https://bpxchain.cc/)",
+  "author": "BPX Chain <hello@bpxchain.cc> (https://bpxchain.cc/)",
   "description": "BPX Core Library",
   "productName": "BPX Beacon Client",
   "version": "1.0.0",

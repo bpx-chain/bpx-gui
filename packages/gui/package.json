@@ -1,6 +1,6 @@
 {
   "name": "@bpx-chain/gui",
-  "author": "BPX Network <hello@bpxchain.cc> (https://bpxchain.cc/)",
+  "author": "BPX Chain <hello@bpxchain.cc> (https://bpxchain.cc/)",
   "description": "GUI for BPX Beacon Client",
   "license": "Apache-2.0",
   "productName": "BPX Beacon Client",

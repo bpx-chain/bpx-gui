@@ -1,6 +1,6 @@
 {
   "name": "@bpx-chain/api-react",
-  "author": "BPX Network <hello@bpxchain.cc> (https://bpxchain.cc/)",
+  "author": "BPX Chain <hello@bpxchain.cc> (https://bpxchain.cc/)",
   "description": "BPX API react store library",
   "productName": "BPX Beacon Client",
   "version": "1.0.0",
