@@ -87,7 +87,6 @@
         "--rpm-rpmbuild-define=debug_package %{nil}",
         "--rpm-rpmbuild-define=__os_install_post /usr/lib/rpm/brp-compress %{nil}",
         "--rpm-attr=4755,root,root:/opt/bpx-beacon-client/chrome-sandbox",
-        "--rpm-tag=Recommends: libxcrypt-compat",
         "--directories=/opt/bpx-beacon-client",
         "--rpm-tag=Requires(pre): findutils",
         "--before-install=../../../build_scripts/assets/rpm/before-install.sh"
