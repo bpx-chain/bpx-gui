@@ -1,8 +1,8 @@
 import {
   useGetThrottlePlotQueueQuery,
   useGetTotalHarvestersSummaryQuery,
-} from '@bpx-network/api-react';
-import { Loading, Flex } from '@bpx-network/core';
+} from '@bpx-chain/api-react';
+import { Loading, Flex } from '@bpx-chain/core';
 import { Grid } from '@mui/material';
 import React from 'react';
 

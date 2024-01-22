@@ -1,4 +1,4 @@
-import { ModeProvider, Persist } from '@bpx-network/core';
+import { ModeProvider, Persist } from '@bpx-chain/core';
 import React from 'react';
 
 import AppRouter from './AppRouter';

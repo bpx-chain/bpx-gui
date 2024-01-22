@@ -1,7 +1,7 @@
-import { defaultPlotter, PlotterName } from '@bpx-network/api';
-import type { Plotter, PlotterMap } from '@bpx-network/api';
-import { useGetPlottersQuery } from '@bpx-network/api-react';
-import { CardStep, Select, StateColor } from '@bpx-network/core';
+import { defaultPlotter, PlotterName } from '@bpx-chain/api';
+import type { Plotter, PlotterMap } from '@bpx-chain/api';
+import { useGetPlottersQuery } from '@bpx-chain/api-react';
+import { CardStep, Select, StateColor } from '@bpx-chain/core';
 import { t, Trans } from '@lingui/macro';
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Typography } from '@mui/material';
 import React, { useMemo } from 'react';

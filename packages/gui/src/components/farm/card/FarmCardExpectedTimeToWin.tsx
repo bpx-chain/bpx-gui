@@ -1,5 +1,5 @@
-import { useGetBlockchainStateQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-network/api-react';
-import { State, CardSimple } from '@bpx-network/core';
+import { useGetBlockchainStateQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-chain/api-react';
+import { State, CardSimple } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';

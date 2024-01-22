@@ -1,4 +1,4 @@
-import { CardStep, Select, StateColor, TextField } from '@bpx-network/core';
+import { CardStep, Select, StateColor, TextField } from '@bpx-chain/core';
 import { t, Trans } from '@lingui/macro';
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Typography } from '@mui/material';
 import React from 'react';

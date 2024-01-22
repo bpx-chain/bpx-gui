@@ -1,4 +1,4 @@
-import { Bpx } from '@bpx-network/icons';
+import { Bpx } from '@bpx-chain/icons';
 import { Box, BoxProps } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';

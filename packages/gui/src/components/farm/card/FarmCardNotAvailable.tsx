@@ -1,4 +1,4 @@
-import { State, StateIndicator, CardSimple } from '@bpx-network/core';
+import { State, StateIndicator, CardSimple } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React, { type ReactNode } from 'react';
 

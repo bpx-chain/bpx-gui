@@ -1,5 +1,5 @@
-import type { KeyData } from '@bpx-network/api';
-import { useDeleteKeyByFingerprintMutation } from '@bpx-network/api-react';
+import type { KeyData } from '@bpx-chain/api';
+import { useDeleteKeyByFingerprintMutation } from '@bpx-chain/api-react';
 import { Trans } from '@lingui/macro';
 import { Delete as DeleteIcon, Visibility as VisibilityIcon, Edit as EditIcon } from '@mui/icons-material';
 import { Box, Typography, ListItemIcon } from '@mui/material';
@@ -10,7 +10,7 @@ import {
   More,
   useOpenDialog,
   ConfirmDialog,
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 import KeyDetailDialog from './KeyDetailDialog';
 import KeyRenameDialog from './KeyRenameDialog';
 

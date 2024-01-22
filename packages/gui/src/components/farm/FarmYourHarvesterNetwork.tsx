@@ -1,7 +1,7 @@
-import type { Connection } from '@bpx-network/api';
-import { ServiceName } from '@bpx-network/api';
-import { useService, useGetHarvesterConnectionsQuery } from '@bpx-network/api-react';
-import { Table, FormatBytes, FormatConnectionStatus, Card } from '@bpx-network/core';
+import type { Connection } from '@bpx-chain/api';
+import { ServiceName } from '@bpx-chain/api';
+import { useService, useGetHarvesterConnectionsQuery } from '@bpx-chain/api-react';
+import { Table, FormatBytes, FormatConnectionStatus, Card } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { Typography, Tooltip, IconButton } from '@mui/material';

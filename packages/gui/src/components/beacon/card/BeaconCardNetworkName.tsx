@@ -1,5 +1,5 @@
-import { useGetNetworkInfoQuery } from '@bpx-network/api-react';
-import { CardSimple } from '@bpx-network/core';
+import { useGetNetworkInfoQuery } from '@bpx-chain/api-react';
+import { CardSimple } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 

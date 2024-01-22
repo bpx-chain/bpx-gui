@@ -1,5 +1,5 @@
 {
-  "name": "@bpx-network/gui",
+  "name": "@bpx-chain/gui",
   "author": "BPX Network <hello@bpxchain.cc> (https://bpxchain.cc/)",
   "description": "GUI for BPX Beacon Client",
   "license": "Apache-2.0",
@@ -117,10 +117,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@bpx-network/api": "1.0.0",
-    "@bpx-network/api-react": "1.0.0",
-    "@bpx-network/core": "1.0.0",
-    "@bpx-network/icons": "1.0.0",
+    "@bpx-chain/api": "1.0.0",
+    "@bpx-chain/api-react": "1.0.0",
+    "@bpx-chain/core": "1.0.0",
+    "@bpx-chain/icons": "1.0.0",
     "@electron/remote": "2.0.1",
     "@lingui/core": "3.13.0",
     "@lingui/macro": "3.13.0",

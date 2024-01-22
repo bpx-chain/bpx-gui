@@ -1,6 +1,6 @@
-import { useGetPlottersQuery, useGetKeysQuery } from '@bpx-network/api-react';
+import { useGetPlottersQuery, useGetKeysQuery } from '@bpx-chain/api-react';
 import React from 'react';
-import { Suspender } from '@bpx-network/core';
+import { Suspender } from '@bpx-chain/core';
 
 import PlotAddForm from './PlotAddForm';
 

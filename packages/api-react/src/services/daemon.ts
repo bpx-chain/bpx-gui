@@ -1,11 +1,11 @@
-import { Daemon, optionsForPlotter, defaultsForPlotter, PlotterName } from '@bpx-network/api';
+import { Daemon, optionsForPlotter, defaultsForPlotter, PlotterName } from '@bpx-chain/api';
 import type {
     Plotter,
     PlotterMap,
     KeyringStatus,
     ServiceName,
     KeyData
-} from '@bpx-network/api';
+} from '@bpx-chain/api';
 
 import api, { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';

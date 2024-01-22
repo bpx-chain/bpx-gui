@@ -1,4 +1,4 @@
-import { LayoutDashboard, Mode, useMode } from '@bpx-network/core';
+import { LayoutDashboard, Mode, useMode } from '@bpx-chain/core';
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 

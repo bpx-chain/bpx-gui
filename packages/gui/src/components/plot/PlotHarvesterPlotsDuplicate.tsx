@@ -1,6 +1,6 @@
-import { type Plot } from '@bpx-network/api';
-import { useGetHarvesterPlotsDuplicatesQuery, useGetHarvesterQuery } from '@bpx-network/api-react';
-import { TableControlled } from '@bpx-network/core';
+import { type Plot } from '@bpx-chain/api';
+import { useGetHarvesterPlotsDuplicatesQuery, useGetHarvesterQuery } from '@bpx-chain/api-react';
+import { TableControlled } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Typography } from '@mui/material';
 import React, { useState, useMemo } from 'react';

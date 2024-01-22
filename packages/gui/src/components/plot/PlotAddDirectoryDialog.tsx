@@ -2,8 +2,8 @@ import {
   useAddPlotDirectoryMutation,
   useRemovePlotDirectoryMutation,
   useGetPlotDirectoriesQuery,
-} from '@bpx-network/api-react';
-import { useShowError, Button, Suspender } from '@bpx-network/core';
+} from '@bpx-chain/api-react';
+import { useShowError, Button, Suspender } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Folder as FolderIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {

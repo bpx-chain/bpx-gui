@@ -1,5 +1,5 @@
-import { Harvester } from '@bpx-network/api';
-import type { Plot, HarvesterConfig } from '@bpx-network/api';
+import { Harvester } from '@bpx-chain/api';
+import type { Plot, HarvesterConfig } from '@bpx-chain/api';
 
 import { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';

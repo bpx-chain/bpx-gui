@@ -3,7 +3,7 @@ import { type Shell } from 'electron';
 import {
   Farming as FarmingIcon,
   Beacon as BeaconIcon,
-} from '@bpx-network/icons';
+} from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import {
   WbSunny as WbSunnyIcon,

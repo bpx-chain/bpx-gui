@@ -1,8 +1,8 @@
-import type { KeyData } from '@bpx-network/api';
+import type { KeyData } from '@bpx-chain/api';
 import {
   useDeleteAllKeysMutation,
   useGetKeysQuery,
-} from '@bpx-network/api-react';
+} from '@bpx-chain/api-react';
 import { Trans } from '@lingui/macro';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { Alert, Typography, ListItemIcon } from '@mui/material';
@@ -25,7 +25,7 @@ import {
   useOpenDialog,
   useShowError,
   Table,
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 
 const cols = [
   {

@@ -1,4 +1,4 @@
-import { useGetKeyQuery } from '@bpx-network/api-react';
+import { useGetKeyQuery } from '@bpx-chain/api-react';
 import { Trans } from '@lingui/macro';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import React from 'react';
@@ -8,7 +8,7 @@ import {
   AlertDialog,
   Flex,
   Loading,
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 
 const StyledTypographyDD = styled(Typography)`
   word-break: break-all;

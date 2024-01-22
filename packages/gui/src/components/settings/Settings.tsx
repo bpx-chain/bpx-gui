@@ -1,4 +1,4 @@
-import { Flex, LayoutDashboardSub, Mode, useMode } from '@bpx-network/core';
+import { Flex, LayoutDashboardSub, Mode, useMode } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Typography, Tab, Tabs } from '@mui/material';
 import React from 'react';

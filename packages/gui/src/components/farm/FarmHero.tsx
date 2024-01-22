@@ -1,5 +1,5 @@
-import { Button, CardHero, Link, useOpenDialog } from '@bpx-network/core';
-import { Farming } from '@bpx-network/icons';
+import { Button, CardHero, Link, useOpenDialog } from '@bpx-chain/core';
+import { Farming } from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import { Divider, Grid, Typography } from '@mui/material';
 import React from 'react';

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign -- This file use Immer */
-import { Farmer } from '@bpx-network/api';
-import type { Plot, FarmerConnection, SignagePoint, FarmingInfo } from '@bpx-network/api';
+import { Farmer } from '@bpx-chain/api';
+import type { Plot, FarmerConnection, SignagePoint, FarmingInfo } from '@bpx-chain/api';
 
 import api, { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';

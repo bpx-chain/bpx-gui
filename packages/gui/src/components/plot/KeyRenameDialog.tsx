@@ -1,5 +1,5 @@
-import type { KeyData } from '@bpx-network/api';
-import { useDeleteLabelMutation, useSetLabelMutation } from '@bpx-network/api-react';
+import type { KeyData } from '@bpx-chain/api';
+import { useDeleteLabelMutation, useSetLabelMutation } from '@bpx-chain/api-react';
 import { Trans, t } from '@lingui/macro';
 import { Button, Dialog, DialogTitle, DialogContent, Alert, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
@@ -12,7 +12,7 @@ import {
   Form,
   Loading,
   TextField
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 
 type FormData = {
   label: string;

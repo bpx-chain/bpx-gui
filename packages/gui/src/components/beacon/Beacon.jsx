@@ -1,6 +1,6 @@
-import { useGetLatestBlocksQuery, useGetUnfinishedBlockHeadersQuery } from '@bpx-network/api-react';
-import { FormatLargeNumber, Flex, Card, StateColor, Table, LayoutDashboardSub } from '@bpx-network/core';
-import { Status } from '@bpx-network/icons';
+import { useGetLatestBlocksQuery, useGetUnfinishedBlockHeadersQuery } from '@bpx-chain/api-react';
+import { FormatLargeNumber, Flex, Card, StateColor, Table, LayoutDashboardSub } from '@bpx-chain/core';
+import { Status } from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import { Box, Tooltip, Typography } from '@mui/material';
 import { get } from 'lodash';

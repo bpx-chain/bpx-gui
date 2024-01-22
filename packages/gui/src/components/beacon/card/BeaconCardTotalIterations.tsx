@@ -1,5 +1,5 @@
-import { useGetBlockchainStateQuery } from '@bpx-network/api-react';
-import { FormatLargeNumber, CardSimple } from '@bpx-network/core';
+import { useGetBlockchainStateQuery } from '@bpx-chain/api-react';
+import { FormatLargeNumber, CardSimple } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 

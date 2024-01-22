@@ -1,4 +1,4 @@
-import { usePrefs } from '@bpx-network/api-react';
+import { usePrefs } from '@bpx-chain/api-react';
 import { Theme } from '@mui/material';
 
 export default function useThemeColor(theme: Theme, variant?: string): string {

@@ -1,10 +1,10 @@
-import { Flex, SideBarItem } from '@bpx-network/core';
+import { Flex, SideBarItem } from '@bpx-chain/core';
 import {
   Farming as FarmingIcon,
   Beacon as BeaconIcon,
   Plots as PlotsIcon,
   Settings as SettingsIcon,
-} from '@bpx-network/icons';
+} from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import { Box } from '@mui/material';
 import React from 'react';

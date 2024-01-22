@@ -1,5 +1,5 @@
-import { useGetFarmingInfoQuery } from '@bpx-network/api-react';
-import { Link, Table, Card } from '@bpx-network/core';
+import { useGetFarmingInfoQuery } from '@bpx-chain/api-react';
+import { Link, Table, Card } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import moment from 'moment';
 import React from 'react';

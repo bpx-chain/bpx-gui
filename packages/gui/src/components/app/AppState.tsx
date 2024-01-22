@@ -1,12 +1,12 @@
 import { IpcRenderer } from 'electron';
 
-import { ConnectionState, ServiceHumanName, ServiceName } from '@bpx-network/api';
+import { ConnectionState, ServiceHumanName, ServiceName } from '@bpx-chain/api';
 import {
   useCloseMutation,
   useGetStateQuery,
   useServices,
   useGetVersionQuery,
-} from '@bpx-network/api-react';
+} from '@bpx-chain/api-react';
 import {
   Flex,
   LayoutHero,
@@ -14,7 +14,7 @@ import {
   Mode,
   useMode,
   useAppVersion,
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Typography, Collapse } from '@mui/material';
 import isElectron from 'is-electron';

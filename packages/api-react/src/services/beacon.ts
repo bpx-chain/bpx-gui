@@ -1,5 +1,5 @@
-import { Beacon } from '@bpx-network/api';
-import type { Block, BlockRecord, BlockHeader, BlockchainState, BeaconConnection } from '@bpx-network/api';
+import { Beacon } from '@bpx-chain/api';
+import type { Block, BlockRecord, BlockHeader, BlockchainState, BeaconConnection } from '@bpx-chain/api';
 
 import api, { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';

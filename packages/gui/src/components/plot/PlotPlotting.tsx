@@ -1,5 +1,5 @@
-import { useGetThrottlePlotQueueQuery } from '@bpx-network/api-react';
-import { Card, Table } from '@bpx-network/core';
+import { useGetThrottlePlotQueueQuery } from '@bpx-chain/api-react';
+import { Card, Table } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { TableRow } from '@mui/material';
 import React, { useMemo } from 'react';

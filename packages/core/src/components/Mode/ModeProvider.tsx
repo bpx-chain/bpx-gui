@@ -1,4 +1,4 @@
-import { usePrefs } from '@bpx-network/api-react';
+import { usePrefs } from '@bpx-chain/api-react';
 import React, { createContext, ReactNode, useState, useMemo, useCallback } from 'react';
 
 import Mode from '../../constants/Mode';

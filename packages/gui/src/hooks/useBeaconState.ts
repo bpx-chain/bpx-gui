@@ -1,4 +1,4 @@
-import { useGetBlockchainStateQuery } from '@bpx-network/api-react';
+import { useGetBlockchainStateQuery } from '@bpx-chain/api-react';
 
 import BeaconState from '../constants/BeaconState';
 

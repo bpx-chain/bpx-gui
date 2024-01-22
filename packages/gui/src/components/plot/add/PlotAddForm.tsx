@@ -1,6 +1,6 @@
-import { defaultPlotter } from '@bpx-network/api';
-import { useStartPlottingMutation } from '@bpx-network/api-react';
-import { Back, useShowError, ButtonLoading, Flex, Form } from '@bpx-network/core';
+import { defaultPlotter } from '@bpx-chain/api';
+import { useStartPlottingMutation } from '@bpx-chain/api-react';
+import { Back, useShowError, ButtonLoading, Flex, Form } from '@bpx-chain/core';
 import { t, Trans } from '@lingui/macro';
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';

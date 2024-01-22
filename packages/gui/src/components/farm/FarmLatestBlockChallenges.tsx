@@ -1,5 +1,5 @@
-import { useGetSignagePointsQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-network/api-react';
-import { Table, Card } from '@bpx-network/core';
+import { useGetSignagePointsQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-chain/api-react';
+import { Table, Card } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 

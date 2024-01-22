@@ -1,4 +1,4 @@
-import { ServiceName } from '@bpx-network/api';
+import { ServiceName } from '@bpx-chain/api';
 
 import useService, { ServiceState } from './useService';
 

@@ -1,5 +1,5 @@
-import { useOpenBeaconConnectionMutation } from '@bpx-network/api-react';
-import { Button, ButtonLoading, DialogActions, Flex, Form, TextField, useShowError } from '@bpx-network/core';
+import { useOpenBeaconConnectionMutation } from '@bpx-chain/api-react';
+import { Button, ButtonLoading, DialogActions, Flex, Form, TextField, useShowError } from '@bpx-chain/core';
 import { Trans, t } from '@lingui/macro';
 import { Alert, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import React from 'react';

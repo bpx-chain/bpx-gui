@@ -1,5 +1,5 @@
-import { PlotterService } from '@bpx-network/api';
-import type { Plot } from '@bpx-network/api';
+import { PlotterService } from '@bpx-chain/api';
+import type { Plot } from '@bpx-chain/api';
 
 import api, { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';

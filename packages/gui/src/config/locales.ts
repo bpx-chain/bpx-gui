@@ -1,4 +1,4 @@
-import * as coreLocales from '@bpx-network/core/src/locales';
+import * as coreLocales from '@bpx-chain/core/src/locales';
 import { i18n } from '@lingui/core';
 import {
   en,

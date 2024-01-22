@@ -7,7 +7,7 @@ import {
   Checkbox,
   TooltipIcon,
   Select,
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 import { Trans, t } from '@lingui/macro';
 import {
   Grid,

@@ -1,12 +1,12 @@
-import { ServiceName, HarvesterConfig } from '@bpx-network/api';
+import { ServiceName, HarvesterConfig } from '@bpx-chain/api';
 import {
   useGetHarvesterConfigQuery,
   useGetPlottersQuery,
   useUpdateHarvesterConfigMutation,
   useStartServiceMutation,
   useStopServiceMutation,
-} from '@bpx-network/api-react';
-import { ButtonLoading, Flex, SettingsSection, SettingsTitle, SettingsText } from '@bpx-network/core';
+} from '@bpx-chain/api-react';
+import { ButtonLoading, Flex, SettingsSection, SettingsTitle, SettingsText } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Warning as WarningIcon } from '@mui/icons-material';
 import { Alert, Divider, FormControlLabel, Grid, Switch, TextField, Snackbar } from '@mui/material';

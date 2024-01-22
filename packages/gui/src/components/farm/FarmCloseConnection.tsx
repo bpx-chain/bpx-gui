@@ -1,4 +1,4 @@
-import { useCloseFarmerConnectionMutation } from '@bpx-network/api-react';
+import { useCloseFarmerConnectionMutation } from '@bpx-chain/api-react';
 
 type Props = {
   nodeId: string;

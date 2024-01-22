@@ -1,4 +1,4 @@
-import Client, { Service } from '@bpx-network/api';
+import Client, { Service } from '@bpx-chain/api';
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
 

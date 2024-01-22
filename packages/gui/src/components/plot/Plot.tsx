@@ -1,4 +1,4 @@
-import { Flex, LayoutDashboardSub } from '@bpx-network/core';
+import { Flex, LayoutDashboardSub } from '@bpx-chain/core';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 

@@ -1,5 +1,5 @@
-import { useCloseBeaconConnectionMutation } from '@bpx-network/api-react';
-import { ConfirmDialog, useOpenDialog } from '@bpx-network/core';
+import { useCloseBeaconConnectionMutation } from '@bpx-chain/api-react';
+import { ConfirmDialog, useOpenDialog } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 

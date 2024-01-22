@@ -1,4 +1,4 @@
-import { SettingsApp } from '@bpx-network/core';
+import { SettingsApp } from '@bpx-chain/core';
 import { Grid } from '@mui/material';
 import React from 'react';
 

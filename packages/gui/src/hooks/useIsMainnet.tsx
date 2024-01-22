@@ -1,4 +1,4 @@
-import { useGetNetworkInfoQuery } from '@bpx-network/api-react';
+import { useGetNetworkInfoQuery } from '@bpx-chain/api-react';
 
 export default function useIsMainnet(): boolean | undefined {
   const { data: networkInfo } = useGetNetworkInfoQuery();

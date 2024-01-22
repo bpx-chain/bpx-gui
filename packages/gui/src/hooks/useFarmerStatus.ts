@@ -1,5 +1,5 @@
-import { ServiceName } from '@bpx-network/api';
-import { useService } from '@bpx-network/api-react';
+import { ServiceName } from '@bpx-chain/api';
+import { useService } from '@bpx-chain/api-react';
 
 import FarmerStatus from '../constants/FarmerStatus';
 import BeaconState from '../constants/BeaconState';

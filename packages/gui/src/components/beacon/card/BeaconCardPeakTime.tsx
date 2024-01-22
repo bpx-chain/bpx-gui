@@ -1,5 +1,5 @@
-import { useGetLatestPeakTimestampQuery } from '@bpx-network/api-react';
-import { CardSimple } from '@bpx-network/core';
+import { useGetLatestPeakTimestampQuery } from '@bpx-chain/api-react';
+import { CardSimple } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import moment from 'moment';
 import React from 'react';

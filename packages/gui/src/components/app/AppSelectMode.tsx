@@ -1,8 +1,8 @@
-import { Button, Flex, Logo, Card, useMode, Mode } from '@bpx-network/core';
+import { Button, Flex, Logo, Card, useMode, Mode } from '@bpx-chain/core';
 import {
   Farming as FarmingIcon,
   Beacon as BeaconIcon,
-} from '@bpx-network/icons';
+} from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import {
   Settings as SettingsIcon,

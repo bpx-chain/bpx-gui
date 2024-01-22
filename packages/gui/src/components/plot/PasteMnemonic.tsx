@@ -1,4 +1,4 @@
-import { Form, TextField } from '@bpx-network/core';
+import { Form, TextField } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import React from 'react';

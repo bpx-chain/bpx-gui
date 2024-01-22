@@ -1,5 +1,5 @@
-import { useRefreshPlotsMutation, useGetKeysQuery } from '@bpx-network/api-react';
-import { Button, Flex, useOpenDialog, MenuItem, More, AlertDialog } from '@bpx-network/core';
+import { useRefreshPlotsMutation, useGetKeysQuery } from '@bpx-chain/api-react';
+import { Button, Flex, useOpenDialog, MenuItem, More, AlertDialog } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Add, Refresh } from '@mui/icons-material';
 import { ListItemIcon, Typography, Alert } from '@mui/material';

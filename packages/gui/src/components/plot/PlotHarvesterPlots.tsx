@@ -1,6 +1,6 @@
-import { type Plot } from '@bpx-network/api';
-import { useGetHarvesterPlotsValidQuery, useGetHarvesterQuery } from '@bpx-network/api-react';
-import { TableControlled, Flex, FormatBytes, Tooltip, StateColor } from '@bpx-network/core';
+import { type Plot } from '@bpx-chain/api';
+import { useGetHarvesterPlotsValidQuery, useGetHarvesterQuery } from '@bpx-chain/api-react';
+import { TableControlled, Flex, FormatBytes, Tooltip, StateColor } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Warning as WarningIcon } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';

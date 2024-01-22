@@ -1,5 +1,5 @@
-import { useGetHarvesterConnectionsQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-network/api-react';
-import { AdvancedOptions, Flex, LayoutDashboardSub, Loading } from '@bpx-network/core';
+import { useGetHarvesterConnectionsQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-chain/api-react';
+import { AdvancedOptions, Flex, LayoutDashboardSub, Loading } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 

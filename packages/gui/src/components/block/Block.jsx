@@ -1,5 +1,5 @@
-import { toBech32m } from '@bpx-network/api';
-import { useGetBlockQuery, useGetBlockRecordQuery } from '@bpx-network/api-react';
+import { toBech32m } from '@bpx-chain/api';
+import { useGetBlockQuery, useGetBlockRecordQuery } from '@bpx-chain/api-react';
 import {
   Back,
   Button,
@@ -10,7 +10,7 @@ import {
   TooltipIcon,
   Flex,
   Suspender,
-} from '@bpx-network/core';
+} from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Alert, Paper, TableRow, Table, TableBody, TableCell, TableContainer } from '@mui/material';
 import moment from 'moment';

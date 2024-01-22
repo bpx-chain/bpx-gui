@@ -1,6 +1,6 @@
-import { Connection } from '@bpx-network/api';
-import { useGetBeaconConnectionsQuery } from '@bpx-network/api-react';
-import { Card, FormatBytes, FormatLargeNumber, IconButton, Loading, Table, useOpenDialog } from '@bpx-network/core';
+import { Connection } from '@bpx-chain/api';
+import { useGetBeaconConnectionsQuery } from '@bpx-chain/api-react';
+import { Card, FormatBytes, FormatLargeNumber, IconButton, Loading, Table, useOpenDialog } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { Button, Tooltip } from '@mui/material';

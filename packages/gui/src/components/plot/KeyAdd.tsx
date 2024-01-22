@@ -1,5 +1,5 @@
-import { useGenerateMnemonicMutation, useAddPrivateKeyMutation } from '@bpx-network/api-react';
-import { ButtonLoading, Form, TextField, Flex, Loading, useShowError } from '@bpx-network/core';
+import { useGenerateMnemonicMutation, useAddPrivateKeyMutation } from '@bpx-chain/api-react';
+import { ButtonLoading, Form, TextField, Flex, Loading, useShowError } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { TextField as TextFieldMaterial, Typography, Grid, Container } from '@mui/material';
 import React from 'react';

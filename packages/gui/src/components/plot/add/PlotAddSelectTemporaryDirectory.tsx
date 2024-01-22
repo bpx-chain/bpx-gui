@@ -1,5 +1,5 @@
-import { usePrefs } from '@bpx-network/api-react';
-import { AdvancedOptions, ButtonSelected, Flex, TextField, Checkbox, TooltipIcon } from '@bpx-network/core';
+import { usePrefs } from '@bpx-chain/api-react';
+import { AdvancedOptions, ButtonSelected, Flex, TextField, Checkbox, TooltipIcon } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { FormControl, FormControlLabel, Typography } from '@mui/material';
 import React from 'react';

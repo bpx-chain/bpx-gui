@@ -1,5 +1,5 @@
-import { usePrefs } from '@bpx-network/api-react';
-import { ButtonSelected, CardStep, Flex, TextField } from '@bpx-network/core';
+import { usePrefs } from '@bpx-chain/api-react';
+import { ButtonSelected, CardStep, Flex, TextField } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Typography } from '@mui/material';
 import React from 'react';

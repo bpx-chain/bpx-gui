@@ -1,4 +1,4 @@
-import { Loading, State, StateIndicator } from '@bpx-network/core';
+import { Loading, State, StateIndicator } from '@bpx-chain/core';
 import React from 'react';
 
 import BeaconState from '../../constants/BeaconState';

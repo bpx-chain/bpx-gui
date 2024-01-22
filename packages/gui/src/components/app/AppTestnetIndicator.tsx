@@ -1,4 +1,4 @@
-import { AlertDialog, Flex, Tooltip, useOpenDialog } from '@bpx-network/core';
+import { AlertDialog, Flex, Tooltip, useOpenDialog } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';

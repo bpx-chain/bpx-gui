@@ -1,4 +1,4 @@
-import type { Service } from '@bpx-network/api';
+import type { Service } from '@bpx-chain/api';
 
 type Invalidate =
   | {
