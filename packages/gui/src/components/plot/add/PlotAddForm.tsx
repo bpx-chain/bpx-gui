@@ -15,6 +15,7 @@ import PlotAddChooseSize from './PlotAddChooseSize';
 import PlotAddNumberOfPlots from './PlotAddNumberOfPlots';
 import PlotAddSelectFinalDirectory from './PlotAddSelectFinalDirectory';
 import PlotAddChooseFingerprint from './PlotAddChooseFingerprint';
+import PlotAddSelectHybridDiskMode from './PlotAddSelectHybridDiskMode';
 
 type FormData = PlotAddConfig;
 
@@ -107,16 +108,23 @@ export default function PlotAddForm(props: Props) {
           delay,
           workspaceLocation,
           workspaceLocation2,
+          bladebitEnableHybridDiskMode,
           farmerPublicKey,
           poolPublicKey,
           ...rest
       } = data;
+      
+      if (bladebitEnableHybridDiskMode && !workspaceLocation) {
+        throw new Error(t`Temp folder location is required for hybrid disk plotting with 16/128G RAM`);
+      }
 
       const plotAddConfig = {
         ...rest,
         delay: delay * 60,
         workspaceLocation,
         workspaceLocation2: workspaceLocation2 || workspaceLocation,
+        bladebitEnableDisk128Mode: bladebitEnableHybridDiskMode === '128' ? true : undefined,
+        bladebitEnableDisk16Mode: bladebitEnableHybridDiskMode === '16' ? true : undefined,
         farmerPublicKey: farmerPublicKey.startsWith('0x') ? farmerPublicKey.slice(2) : farmerPublicKey,
         poolPublicKey: poolPublicKey.startsWith('0x') ? poolPublicKey.slice(2) : poolPublicKey,
       };
@@ -140,6 +148,7 @@ export default function PlotAddForm(props: Props) {
         <PlotAddChoosePlotter step={step++} onChange={handlePlotterChanged} />
         <PlotAddChooseFingerprint step={step++} fingerprints={fingerprints} />
         <PlotAddChooseSize step={step++} plotter={plotter} />
+        {plotterName === PlotterName.BLADEBIT_CUDA && <PlotAddSelectHybridDiskMode step={step++} plotter={plotter} />}
         <PlotAddNumberOfPlots step={step++} plotter={plotter} />
         <PlotAddSelectFinalDirectory step={step++} plotter={plotter} />
         <Flex justifyContent="flex-end">

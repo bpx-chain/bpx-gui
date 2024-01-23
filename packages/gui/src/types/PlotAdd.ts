@@ -17,6 +17,7 @@ type PlotAdd = {
   bladebit2NoT2Direct?: boolean;
   bladebitDeviceIndex?: number;
   bladebitDisableDirectDownloads?: boolean;
+  bladebitEnableHybridDiskMode?: false | '16' | '128';
   delay: number;
   disableBitfieldPlotting?: boolean;
   excludeFinalDir?: boolean;
