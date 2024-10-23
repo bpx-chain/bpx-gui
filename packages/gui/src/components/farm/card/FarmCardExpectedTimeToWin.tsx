@@ -1,18 +1,18 @@
-import { useGetBlockchainStateQuery, useGetTotalHarvestersSummaryQuery } from '@chia-network/api-react';
-import { State, CardSimple } from '@chia-network/core';
+import { useGetBlockchainStateQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-chain/api-react';
+import { State, CardSimple } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 
-import FullNodeState from '../../../constants/FullNodeState';
-import useFullNodeState from '../../../hooks/useFullNodeState';
+import BeaconState from '../../../constants/BeaconState';
+import useBeaconState from '../../../hooks/useBeaconState';
 import FarmCardNotAvailable from './FarmCardNotAvailable';
 
 const MINUTES_PER_BLOCK = (24 * 60) / 4608; // 0.3125
 
 export default function FarmCardExpectedTimeToWin() {
-  const { state: fullNodeState } = useFullNodeState();
+  const { state: beaconState } = useBeaconState();
 
   const { data, isLoading: isLoadingBlockchainState, error: errorBlockchainState } = useGetBlockchainStateQuery();
   const {
@@ -42,8 +42,8 @@ export default function FarmCardExpectedTimeToWin() {
     })
     .humanize();
 
-  if (fullNodeState !== FullNodeState.SYNCED) {
-    const state = fullNodeState === FullNodeState.SYNCHING ? State.WARNING : undefined;
+  if (beaconState !== BeaconState.SYNCED) {
+    const state = beaconState === BeaconState.SYNCHING ? State.WARNING : undefined;
 
     return <FarmCardNotAvailable title={<Trans>Estimated Time to Win</Trans>} state={state} />;
   }

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign -- This file use Immer */
-import { Farmer } from '@chia-network/api';
-import type { Plot, FarmerConnection, RewardTargets, SignagePoint, Pool, FarmingInfo } from '@chia-network/api';
+import { Farmer } from '@bpx-chain/api';
+import type { Plot, FarmerConnection, SignagePoint, FarmingInfo } from '@bpx-chain/api';
 
 import api, { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';
@@ -9,12 +9,8 @@ const MAX_SIGNAGE_POINTS = 500;
 export const apiWithTag = api.enhanceEndpoints({
   addTagTypes: [
     'Harvesters',
-    'RewardTargets',
     'FarmerConnections',
     'SignagePoints',
-    'PoolLoginLink',
-    'Pools',
-    'PayoutInstructions',
     'HarvesterPlots',
     'HarvesterPlotsInvalid',
     'HarvestersSummary',
@@ -221,36 +217,6 @@ export const farmerApi = apiWithTag.injectEndpoints({
       ]),
     }),
 
-    getRewardTargets: build.query<
-      undefined,
-      {
-        searchForPrivateKey?: boolean;
-      }
-    >({
-      query: ({ searchForPrivateKey } = {}) => ({
-        command: 'getRewardTargets',
-        service: Farmer,
-        args: [searchForPrivateKey],
-      }),
-      // transformResponse: (response: any) => response,
-      providesTags: ['RewardTargets'],
-    }),
-
-    setRewardTargets: build.mutation<
-      RewardTargets,
-      {
-        farmerTarget: string;
-        poolTarget: string;
-      }
-    >({
-      query: ({ farmerTarget, poolTarget }) => ({
-        command: 'setRewardTargets',
-        service: Farmer,
-        args: [farmerTarget, poolTarget],
-      }),
-      invalidatesTags: ['RewardTargets'],
-    }),
-
     getFarmerConnections: build.query<FarmerConnection[], undefined>({
       query: () => ({
         command: 'getConnections',
@@ -309,22 +275,6 @@ export const farmerApi = apiWithTag.injectEndpoints({
       ],
     }),
 
-    getPoolLoginLink: build.query<
-      string,
-      {
-        launcherId: string;
-      }
-    >({
-      query: ({ launcherId }) => ({
-        command: 'getPoolLoginLink',
-        service: Farmer,
-        args: [launcherId],
-      }),
-      transformResponse: (response: any) => response?.loginLink,
-      providesTags: (launcherId) => [{ type: 'PoolLoginLink', id: launcherId }],
-      // TODO invalidate when join pool/change pool
-    }),
-
     getSignagePoints: build.query<SignagePoint[], undefined>({
       query: () => ({
         command: 'getSignagePoints',
@@ -354,36 +304,6 @@ export const farmerApi = apiWithTag.injectEndpoints({
       ]),
     }),
 
-    getPoolState: build.query<Pool[], undefined>({
-      query: () => ({
-        command: 'getPoolState',
-        service: Farmer,
-      }),
-      transformResponse: (response: any) => response?.poolState,
-      providesTags: (poolsList) =>
-        poolsList
-          ? [
-              ...poolsList.map(({ p2SingletonPuzzleHash }) => ({ type: 'Pools', id: p2SingletonPuzzleHash } as const)),
-              { type: 'Pools', id: 'LIST' },
-            ]
-          : [{ type: 'Pools', id: 'LIST' }],
-    }),
-
-    setPayoutInstructions: build.mutation<
-      undefined,
-      {
-        launcherId: string;
-        payoutInstructions: string;
-      }
-    >({
-      query: ({ launcherId, payoutInstructions }) => ({
-        command: 'setPayoutInstructions',
-        service: Farmer,
-        args: [launcherId, payoutInstructions],
-      }),
-      invalidatesTags: (_result, _error, { launcherId }) => [{ type: 'PayoutInstructions', id: launcherId }],
-    }),
-
     getFarmingInfo: build.query<FarmingInfo[], {}>({
       query: () => ({
         command: 'getFarmingInfo',
@@ -411,14 +331,9 @@ export const {
   useGetHarvesterPlotsDuplicatesQuery,
   useGetHarvesterPlotsInvalidQuery,
   useGetHarvesterPlotsKeysMissingQuery,
-  useGetRewardTargetsQuery,
-  useSetRewardTargetsMutation,
   useGetFarmerConnectionsQuery,
   useOpenFarmerConnectionMutation,
   useCloseFarmerConnectionMutation,
-  useGetPoolLoginLinkQuery,
   useGetSignagePointsQuery,
-  useGetPoolStateQuery,
-  useSetPayoutInstructionsMutation,
   useGetFarmingInfoQuery,
 } = farmerApi;

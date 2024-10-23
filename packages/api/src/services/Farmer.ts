@@ -29,19 +29,6 @@ export default class Farmer extends Service {
     return this.farmingInfo;
   }
 
-  async getRewardTargets(searchForPrivateKey: boolean) {
-    return this.command('get_reward_targets', {
-      searchForPrivateKey,
-    });
-  }
-
-  async setRewardTargets(farmerTarget: string, poolTarget: string) {
-    return this.command('set_reward_targets', {
-      farmerTarget,
-      poolTarget,
-    });
-  }
-
   async getSignagePoints() {
     return this.command('get_signage_points');
   }
@@ -60,17 +47,6 @@ export default class Farmer extends Service {
   async closeConnection(nodeId: string) {
     return this.command('close_connection', {
       nodeId,
-    });
-  }
-
-  async getPoolState() {
-    return this.command('get_pool_state');
-  }
-
-  async setPayoutInstructions(launcherId: string, payoutInstructions: string) {
-    return this.command('set_payout_instructions', {
-      launcherId,
-      payoutInstructions,
     });
   }
 
@@ -112,12 +88,6 @@ export default class Farmer extends Service {
 
   async getHarvestersSummary() {
     return this.command('get_harvesters_summary');
-  }
-
-  async getPoolLoginLink(launcherId: string) {
-    return this.command('get_pool_login_link', {
-      launcherId,
-    });
   }
 
   onConnections(callback: (data: any, message: Message) => void, processData?: (data: any) => any) {

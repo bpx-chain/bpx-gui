@@ -1,5 +1,5 @@
 enum Mode {
-  WALLET = 'wallet',
+  NODE = 'node',
   FARMING = 'farming',
 }
 

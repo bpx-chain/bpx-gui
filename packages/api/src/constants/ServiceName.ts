@@ -1,16 +1,12 @@
 enum ServiceName {
-  WALLET = 'chia_wallet',
-  FULL_NODE = 'chia_full_node',
-  FARMER = 'chia_farmer',
-  HARVESTER = 'chia_harvester',
-  SIMULATOR = 'chia_full_node_simulator',
+  BEACON = 'bpx_beacon',
+  FARMER = 'bpx_farmer',
+  HARVESTER = 'bpx_harvester',
   DAEMON = 'daemon',
-  PLOTTER = 'chia_plotter',
-  TIMELORD = 'chia_timelord',
-  INTRODUCER = 'chia_introducer',
-  EVENTS = 'wallet_ui',
-  DATALAYER = 'chia_data_layer',
-  DATALAYER_SERVER = 'chia_data_layer_http',
+  PLOTTER = 'bpx_plotter',
+  TIMELORD = 'bpx_timelord',
+  INTRODUCER = 'bpx_introducer',
+  EVENTS = 'ui',
 }
 
 export default ServiceName;

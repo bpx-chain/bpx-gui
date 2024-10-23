@@ -1,5 +1,5 @@
-import { usePrefs } from '@chia-network/api-react';
-import { AdvancedOptions, ButtonSelected, CardStep, Flex, TextField, Checkbox, TooltipIcon } from '@chia-network/core';
+import { usePrefs } from '@bpx-chain/api-react';
+import { AdvancedOptions, ButtonSelected, Flex, TextField, Checkbox, TooltipIcon } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { FormControl, FormControlLabel, Typography } from '@mui/material';
 import React from 'react';
@@ -10,12 +10,13 @@ import useSelectDirectory from '../../../hooks/useSelectDirectory';
 import Plotter from '../../../types/Plotter';
 
 type Props = {
-  step: number;
   plotter: Plotter;
 };
 
 export default function PlotAddSelectTemporaryDirectory(props: Props) {
-  const { step, plotter } = props;
+  const { plotter } = props;
+  const allowTempDir2Selection = plotter.options.haveTempDir2 === true;
+  const isTempDirRequired = plotter.options.isTempDirRequired === true;
   const selectDirectory = useSelectDirectory();
   const { setValue, watch } = useFormContext();
   const op = plotter.options;
@@ -45,7 +46,7 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
   }
 
   return (
-    <CardStep step={step} title={<Trans>Select Temporary Directory</Trans>}>
+    <>
       <Typography variant="subtitle1">
         <Trans>
           Select the temporary destination for the folder where you would like the plot to be stored. We recommend you
@@ -63,17 +64,19 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
             readOnly: true,
           }}
           variant="filled"
-          rules={{
-            minLength: {
-              value: 1,
-              message: <Trans>Please specify temporary directory</Trans>,
-            },
-            required: {
-              value: true,
-              message: <Trans>Please specify temporary directory</Trans>,
-            },
-          }}
-          required
+          rules={
+            isTempDirRequired ? {
+              minLength: {
+                value: 1,
+                message: <Trans>Please specify temporary directory</Trans>,
+              },
+              required: {
+                value: true,
+                message: <Trans>Please specify temporary directory</Trans>,
+              },
+            } : {}
+          }
+          required={isTempDirRequired}
         />
         <ButtonSelected onClick={handleSelect} size="large" variant="outlined" selected={hasWorkspaceLocation} nowrap>
           {hasWorkspaceLocation ? <Trans>Selected</Trans> : <Trans>Browse</Trans>}
@@ -97,55 +100,59 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
         </FormControl>
       )}
 
-      <AdvancedOptions>
-        <Flex flexDirection="column" gap={2}>
-          <Typography variant="h6">
-            <Trans>Select 2nd Temporary Directory</Trans>
-          </Typography>
-          <Flex gap={2}>
-            <TextField
-              onClick={handleSelect2}
-              fullWidth
-              label={<Trans>Second temporary folder location</Trans>}
-              name="workspaceLocation2"
-              inputProps={{
-                readOnly: true,
-              }}
-              variant="filled"
-            />
-            <ButtonSelected
-              onClick={handleSelect2}
-              size="large"
-              variant="outlined"
-              color="secondary"
-              selected={hasWorkspaceLocation2}
-              nowrap
-            >
-              {hasWorkspaceLocation2 ? <Trans>Selected</Trans> : <Trans>Browse</Trans>}
-            </ButtonSelected>
-          </Flex>
-          <Typography color="textSecondary">
-            <Trans>If none selected, then it will default to the temporary directory.</Trans>
-          </Typography>
-        </Flex>
-        {op.haveBladebitDiskNoT2Direct && (
-          <FormControl variant="filled" fullWidth>
-            <FormControlLabel
-              control={<Checkbox name="bladebitDiskNoT2Direct" />}
-              label={
-                <>
-                  <Trans>The folder is on a RAM Disk</Trans>{' '}
-                  <TooltipIcon>
-                    <Trans>
-                      Disable direct I/O on the temp 2 directory in order to extract maximum performance with RAM disk
-                    </Trans>
-                  </TooltipIcon>
-                </>
-              }
-            />
-          </FormControl>
-        )}
-      </AdvancedOptions>
-    </CardStep>
+      {(allowTempDir2Selection || op.haveBladebitDiskNoT2Direct) && (
+        <AdvancedOptions>
+          {allowTempDir2Selection && (
+            <Flex flexDirection="column" gap={2}>
+              <Typography variant="h6">
+                <Trans>Select 2nd Temporary Directory</Trans>
+              </Typography>
+              <Flex gap={2}>
+                <TextField
+                  onClick={handleSelect2}
+                  fullWidth
+                  label={<Trans>Second temporary folder location</Trans>}
+                  name="workspaceLocation2"
+                  inputProps={{
+                    readOnly: true,
+                  }}
+                  variant="filled"
+                />
+                <ButtonSelected
+                  onClick={handleSelect2}
+                  size="large"
+                  variant="outlined"
+                  color="secondary"
+                  selected={hasWorkspaceLocation2}
+                  nowrap
+                >
+                  {hasWorkspaceLocation2 ? <Trans>Selected</Trans> : <Trans>Browse</Trans>}
+                </ButtonSelected>
+              </Flex>
+              <Typography color="textSecondary">
+                <Trans>If none selected, then it will default to the temporary directory.</Trans>
+              </Typography>
+            </Flex>
+          )}
+          {op.haveBladebitDiskNoT2Direct && (
+            <FormControl variant="filled" fullWidth>
+              <FormControlLabel
+                control={<Checkbox name="bladebitDiskNoT2Direct" />}
+                label={
+                  <>
+                    <Trans>The folder is on a RAM Disk</Trans>{' '}
+                    <TooltipIcon>
+                      <Trans>
+                        Disable direct I/O on the temp 2 directory in order to extract maximum performance with RAM disk
+                      </Trans>
+                    </TooltipIcon>
+                  </>
+                }
+              />
+            </FormControl>
+          )}
+        </AdvancedOptions>
+      )}
+    </>
   );
 }

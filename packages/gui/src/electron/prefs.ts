@@ -40,16 +40,3 @@ export function savePrefs(prefs: Record<string, any>) {
     console.warn(e);
   }
 }
-
-export function migratePrefs(prefs: Record<string, any>) {
-  const currentPrefs = readPrefs();
-  Object.keys(prefs).forEach((key) => {
-    // When currentPrefs already has the pref, don't override it.
-    // Prefs in `prefs.yaml` has priority over prefs from localStorage.
-    if (!Object.hasOwn(currentPrefs, key)) {
-      currentPrefs[key] = prefs[key];
-    }
-  });
-
-  savePrefs(currentPrefs);
-}

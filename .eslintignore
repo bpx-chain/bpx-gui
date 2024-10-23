@@ -5,7 +5,6 @@ daemon
 build
 *_old
 packages/*/test/data_fixtures
-packages/wallet/*
 locales
 restoreMessages.js
 rollup.config.js

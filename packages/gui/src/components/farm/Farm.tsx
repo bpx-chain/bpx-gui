@@ -1,9 +1,9 @@
-import { useGetHarvesterConnectionsQuery, useGetTotalHarvestersSummaryQuery } from '@chia-network/api-react';
-import { AdvancedOptions, Flex, LayoutDashboardSub, Loading } from '@chia-network/core';
+import { useGetHarvesterConnectionsQuery, useGetTotalHarvestersSummaryQuery } from '@bpx-chain/api-react';
+import { AdvancedOptions, Flex, LayoutDashboardSub, Loading } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 
-import FarmFullNodeConnections from './FarmFullNodeConnections';
+import FarmBeaconConnections from './FarmBeaconConnections';
 import FarmHeader from './FarmHeader';
 import FarmHero from './FarmHero';
 import FarmLastAttemptedProof from './FarmLastAttemptedProof';
@@ -33,7 +33,7 @@ export default function Farm() {
               <FarmLatestBlockChallenges />
               <AdvancedOptions>
                 <Flex flexDirection="column" gap={3}>
-                  <FarmFullNodeConnections />
+                  <FarmBeaconConnections />
                   <FarmYourHarvesterNetwork />
                 </Flex>
               </AdvancedOptions>

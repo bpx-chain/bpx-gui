@@ -1,32 +1,26 @@
-import { defaultPlotter, toBech32m, fromBech32m } from '@chia-network/api';
-import { useStartPlottingMutation, useCreateNewPoolWalletMutation } from '@chia-network/api-react';
-import { Back, useShowError, ButtonLoading, Flex, Form } from '@chia-network/core';
+import { defaultPlotter } from '@bpx-chain/api';
+import { useStartPlottingMutation } from '@bpx-chain/api-react';
+import { Back, useShowError, ButtonLoading, Flex, Form } from '@bpx-chain/core';
 import { t, Trans } from '@lingui/macro';
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router';
 
-import PlotNFTState from '../../../constants/PlotNFTState';
 import PlotterName from '../../../constants/PlotterName';
 import { plottingInfo } from '../../../constants/plotSizes';
-import useUnconfirmedPlotNFTs from '../../../hooks/useUnconfirmedPlotNFTs';
 import PlotAddConfig from '../../../types/PlotAdd';
 import { PlotterDefaults, PlotterOptions } from '../../../types/Plotter';
 import PlotAddChoosePlotter from './PlotAddChoosePlotter';
 import PlotAddChooseSize from './PlotAddChooseSize';
-import PlotAddNFT from './PlotAddNFT';
 import PlotAddNumberOfPlots from './PlotAddNumberOfPlots';
 import PlotAddSelectFinalDirectory from './PlotAddSelectFinalDirectory';
-import PlotAddSelectTemporaryDirectory from './PlotAddSelectTemporaryDirectory';
+import PlotAddChooseFingerprint from './PlotAddChooseFingerprint';
+import PlotAddSelectHybridDiskMode from './PlotAddSelectHybridDiskMode';
 
-type FormData = PlotAddConfig & {
-  p2SingletonPuzzleHash?: string;
-  createNFT?: boolean;
-  plotNFTContractAddr?: string;
-};
+type FormData = PlotAddConfig;
 
 type Props = {
-  fingerprint: number;
+  fingerprints: any;
   plotters: Record<
     PlotterName,
     {
@@ -41,20 +35,16 @@ type Props = {
       };
     }
   >;
-  currencyCode: string;
 };
 
 export default function PlotAddForm(props: Props) {
-  const { fingerprint, plotters, currencyCode } = props;
+  const { fingerprints, plotters } = props;
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const showError = useShowError();
 
-  const { add: addUnconfirmedPlotNFT } = useUnconfirmedPlotNFTs();
   const [startPlotting] = useStartPlottingMutation();
-  const [createNewPoolWallet] = useCreateNewPoolWalletMutation();
-  const addNFTref = useRef();
   const { state } = useLocation();
 
   const otherDefaults = {
@@ -63,12 +53,10 @@ export default function PlotAddForm(props: Props) {
     finalLocation: '',
     workspaceLocation: '',
     workspaceLocation2: '',
-    farmerPublicKey: '',
-    poolPublicKey: '',
-    plotNFTContractAddr: '',
     excludeFinalDir: false,
-    p2SingletonPuzzleHash: state?.p2SingletonPuzzleHash ?? '',
-    createNFT: false,
+    fingerprint: fingerprints[0].fingerprint,
+    farmerPublicKey: fingerprints[0].farmerPk,
+    poolPublicKey: fingerprints[0].poolPk,
   };
 
   const defaultsForPlotter = (plotterName: PlotterName) => {
@@ -88,7 +76,7 @@ export default function PlotAddForm(props: Props) {
     defaultValues: defaultsForPlotter(PlotterName.CHIAPOS),
   });
 
-  const { watch, setValue, reset } = methods;
+  const { watch, setValue, reset, getValues } = methods;
   const plotterName = watch('plotterName') as PlotterName;
   const plotSize = watch('plotSize');
 
@@ -101,70 +89,47 @@ export default function PlotAddForm(props: Props) {
 
   const plotter = plotters[plotterName] ?? defaultPlotter;
   let step = 1;
-  const allowTempDirectorySelection: boolean = plotter.options.haveBladebitOutputDir === false;
 
   const handlePlotterChanged = (newPlotterName: PlotterName) => {
     const defaults = defaultsForPlotter(newPlotterName);
-    reset(defaults);
+    const formValues = getValues();
+    reset({
+        ...defaults,
+        fingerprint: formValues.fingerprint,
+        farmerPublicKey: formValues.farmerPublicKey,
+        poolPublicKey: formValues.poolPublicKey,
+    });
   };
 
   const handleSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       setLoading(true);
-      const { p2SingletonPuzzleHash, delay, createNFT, ...rest } = data;
-      const { farmerPublicKey, poolPublicKey, plotNFTContractAddr } = rest;
-
-      let selectedP2SingletonPuzzleHash = p2SingletonPuzzleHash;
-
-      if (!currencyCode) {
-        throw new Error(t`Currency code is not defined`);
-      }
-
-      if (createNFT) {
-        // create nft
-        const nftData = await addNFTref.current?.getSubmitData();
-
-        const {
-          fee,
-          initialTargetState,
-          initialTargetState: { state: stateLocal },
-        } = nftData;
-        const { transaction, p2SingletonPuzzleHash: p2SingletonPuzzleHashLocal } = await createNewPoolWallet({
-          initialTargetState,
-          fee,
-        }).unwrap();
-
-        if (!p2SingletonPuzzleHashLocal) {
-          throw new Error(t`p2SingletonPuzzleHash is not defined`);
-        }
-
-        addUnconfirmedPlotNFT({
-          transactionId: transaction.name,
-          state: stateLocal === 'SELF_POOLING' ? PlotNFTState.SELF_POOLING : PlotNFTState.FARMING_TO_POOL,
-          poolUrl: initialTargetState.poolUrl,
-        });
-
-        selectedP2SingletonPuzzleHash = p2SingletonPuzzleHashLocal;
+      const {
+          delay,
+          workspaceLocation,
+          workspaceLocation2,
+          bladebitEnableHybridDiskMode,
+          farmerPublicKey,
+          poolPublicKey,
+          ...rest
+      } = data;
+      
+      if (bladebitEnableHybridDiskMode && !workspaceLocation) {
+        throw new Error(t`Temp folder location is required for hybrid disk plotting with 16/128G RAM`);
       }
 
       const plotAddConfig = {
         ...rest,
         delay: delay * 60,
+        workspaceLocation,
+        workspaceLocation2: workspaceLocation2 || workspaceLocation,
+        bladebitEnableDisk128Mode: bladebitEnableHybridDiskMode === '128' ? true : undefined,
+        bladebitEnableDisk16Mode: bladebitEnableHybridDiskMode === '16' ? true : undefined,
+        farmerPublicKey: farmerPublicKey.startsWith('0x') ? farmerPublicKey.slice(2) : farmerPublicKey,
+        poolPublicKey: poolPublicKey.startsWith('0x') ? poolPublicKey.slice(2) : poolPublicKey,
       };
 
-      if (!selectedP2SingletonPuzzleHash && plotNFTContractAddr) {
-        selectedP2SingletonPuzzleHash = fromBech32m(plotNFTContractAddr);
-      }
-
-      if (selectedP2SingletonPuzzleHash) {
-        plotAddConfig.c = toBech32m(selectedP2SingletonPuzzleHash, currencyCode.toLowerCase());
-      }
-
-      if (!selectedP2SingletonPuzzleHash && !farmerPublicKey && !poolPublicKey && fingerprint) {
-        plotAddConfig.fingerprint = fingerprint;
-      }
-
-      await startPlotting(plotAddConfig).unwrap();
+      await startPlotting({ plotAddConfig }).unwrap();
 
       navigate('/dashboard/plot');
     } catch (error) {
@@ -181,11 +146,11 @@ export default function PlotAddForm(props: Props) {
           <Trans>Add a Plot</Trans>
         </Back>
         <PlotAddChoosePlotter step={step++} onChange={handlePlotterChanged} />
+        <PlotAddChooseFingerprint step={step++} fingerprints={fingerprints} />
         <PlotAddChooseSize step={step++} plotter={plotter} />
+        {plotterName === PlotterName.BLADEBIT_CUDA && <PlotAddSelectHybridDiskMode step={step++} plotter={plotter} />}
         <PlotAddNumberOfPlots step={step++} plotter={plotter} />
-        {allowTempDirectorySelection && <PlotAddSelectTemporaryDirectory step={step++} plotter={plotter} />}
         <PlotAddSelectFinalDirectory step={step++} plotter={plotter} />
-        <PlotAddNFT ref={addNFTref} step={step++} plotter={plotter} />
         <Flex justifyContent="flex-end">
           <ButtonLoading loading={loading} color="primary" type="submit" variant="contained">
             <Trans>Create</Trans>

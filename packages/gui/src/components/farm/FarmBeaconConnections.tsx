@@ -1,0 +1,91 @@
+import type { Connection } from '@bpx-chain/api';
+import { ServiceName } from '@bpx-chain/api';
+import { useGetFarmerBeaconConnectionsQuery, useService } from '@bpx-chain/api-react';
+import { Table, Card, FormatBytes, FormatConnectionStatus } from '@bpx-chain/core';
+import { Trans } from '@lingui/macro';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { Link, Typography, Tooltip, IconButton } from '@mui/material';
+import React from 'react';
+import styled from 'styled-components';
+
+import FarmCloseConnection from './FarmCloseConnection';
+
+const StyledIconButton = styled(IconButton)`
+  padding: 0.2rem;
+`;
+
+const cols = [
+  {
+    minWidth: '200px',
+    field(row: Connection) {
+      return (
+        <Tooltip title={row.nodeId}>
+          <span>{row.nodeId}</span>
+        </Tooltip>
+      );
+    },
+    title: <Trans>Node ID</Trans>,
+  },
+  {
+    field: 'peerHost',
+    title: <Trans>Host Name</Trans>,
+  },
+  {
+    field(row: Connection) {
+      return `${row.peerPort}/${row.peerServerPort}`;
+    },
+    title: <Trans>Port</Trans>,
+  },
+  {
+    field(row: Connection) {
+      return (
+        <>
+          <FormatBytes value={row.bytesWritten} unit="KiB" removeUnit fixedDecimals />
+          /
+          <FormatBytes value={row.bytesRead} unit="KiB" removeUnit fixedDecimals />
+        </>
+      );
+    },
+    title: <Trans>KiB Up/Down</Trans>,
+  },
+  {
+    title: <Trans>Actions</Trans>,
+    field(row: Connection) {
+      return (
+        <FarmCloseConnection nodeId={row.nodeId}>
+          {({ onClose }) => (
+            <StyledIconButton onClick={() => onClose()}>
+              <DeleteIcon />
+            </StyledIconButton>
+          )}
+        </FarmCloseConnection>
+      );
+    },
+  },
+];
+
+export default function FarmBeaconConnections() {
+  const { data: connections = [] } = useGetFarmerBeaconConnectionsQuery();
+  const { isRunning, isLoading } = useService(ServiceName.FARMER);
+
+  return (
+    <Card
+      gap={1}
+      title={<Trans>Your Beacon Client Connection</Trans>}
+      titleVariant="h6"
+      tooltip={
+        <Trans>
+          {'The Beacon Client that your farmer is connected to is below. '}
+        </Trans>
+      }
+      transparent
+    >
+      <Typography variant="caption" color="textSecondary">
+        <Trans>Connection Status:</Trans>
+        &nbsp;
+        <FormatConnectionStatus connected={isRunning} />
+      </Typography>
+      <Table cols={cols} rows={connections} isLoading={isLoading} />
+    </Card>
+  );
+}

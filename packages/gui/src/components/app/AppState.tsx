@@ -1,47 +1,34 @@
 import { IpcRenderer } from 'electron';
 
-import { ConnectionState, ServiceHumanName, ServiceName, PassphrasePromptReason } from '@chia-network/api';
+import { ConnectionState, ServiceHumanName, ServiceName } from '@bpx-chain/api';
 import {
   useCloseMutation,
   useGetStateQuery,
-  useGetKeyringStatusQuery,
   useServices,
   useGetVersionQuery,
-} from '@chia-network/api-react';
+} from '@bpx-chain/api-react';
 import {
   Flex,
   LayoutHero,
   LayoutLoading,
   Mode,
   useMode,
-  useIsSimulator,
   useAppVersion,
-  useCurrencyCode,
-} from '@chia-network/core';
+} from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Typography, Collapse } from '@mui/material';
 import isElectron from 'is-electron';
 import React, { useState, useEffect, ReactNode, useMemo } from 'react';
 
-import ModeServices, { SimulatorServices } from '../../constants/ModeServices';
-import useEnableDataLayerService from '../../hooks/useEnableDataLayerService';
-import useEnableFilePropagationServer from '../../hooks/useEnableFilePropagationServer';
-import useNFTMetadataLRU from '../../hooks/useNFTMetadataLRU';
-import NFTContextualActionsEventEmitter from '../nfts/NFTContextualActionsEventEmitter';
-import AppAutoLogin from './AppAutoLogin';
-import AppKeyringMigrator from './AppKeyringMigrator';
-import AppPassPrompt from './AppPassPrompt';
+import ModeServices from '../../constants/ModeServices';
 import AppSelectMode from './AppSelectMode';
 import AppVersionWarning from './AppVersionWarning';
+import useIsMainnet from '../../hooks/useIsMainnet';
 
 const ALL_SERVICES = [
-  ServiceName.WALLET,
-  ServiceName.FULL_NODE,
+  ServiceName.BEACON,
   ServiceName.FARMER,
   ServiceName.HARVESTER,
-  ServiceName.SIMULATOR,
-  ServiceName.DATALAYER,
-  ServiceName.DATALAYER_SERVER,
 ];
 
 type Props = {
@@ -53,47 +40,25 @@ export default function AppState(props: Props) {
   const [close] = useCloseMutation();
   const [closing, setClosing] = useState<boolean>(false);
   const { data: clientState = {}, isLoading: isClientStateLoading } = useGetStateQuery();
-  const { data: keyringStatus, isLoading: isLoadingKeyringStatus } = useGetKeyringStatusQuery();
   const [mode] = useMode();
-  const isSimulator = useIsSimulator();
-  const [enableDataLayerService] = useEnableDataLayerService();
-  const [enableFilePropagationServer] = useEnableFilePropagationServer();
-  // NOTE: We only start the DL at launch time for now
-  const [isDataLayerEnabled] = useState(enableDataLayerService);
-  const [isFilePropagationServerEnabled] = useState(enableFilePropagationServer);
   const [versionDialog, setVersionDialog] = useState<boolean>(true);
   const [updatedWindowTitle, setUpdatedWindowTitle] = useState<boolean>(false);
   const { data: backendVersion } = useGetVersionQuery();
   const { version } = useAppVersion();
-  const lru = useNFTMetadataLRU();
-  const isTestnet = useCurrencyCode() === 'TXCH';
+  const isMainnet = useIsMainnet();
+  const isTestnet = isMainnet === undefined ? false : (isMainnet ? false : true);
 
   const runServices = useMemo<ServiceName[] | undefined>(() => {
     if (mode) {
-      const services: ServiceName[] = isSimulator ? SimulatorServices : ModeServices[mode];
-
-      if (isDataLayerEnabled) {
-        if (!services.includes(ServiceName.DATALAYER)) {
-          services.push(ServiceName.DATALAYER);
-        }
-
-        // File propagation server is dependent on the datalayer
-        if (isFilePropagationServerEnabled && !services.includes(ServiceName.DATALAYER_SERVER)) {
-          services.push(ServiceName.DATALAYER_SERVER);
-        }
-      }
-
-      return services;
+      return ModeServices[mode];
     }
 
     return undefined;
-  }, [mode, isSimulator, isDataLayerEnabled, isFilePropagationServerEnabled]);
-
-  const isKeyringReady = !!keyringStatus && !keyringStatus.isKeyringLocked;
+  }, [mode]);
 
   const servicesState = useServices(ALL_SERVICES, {
     keepRunning: !closing ? runServices : [],
-    disabled: !isKeyringReady,
+    disabled: false,
   });
 
   const allServicesRunning = useMemo<boolean>(() => {
@@ -112,9 +77,9 @@ export default function AppState(props: Props) {
 
   useEffect(() => {
     const allRunningServices = servicesState.running.map((serviceState) => serviceState.service);
-    const nonWalletServiceRunning = allRunningServices.some((service) => service !== ServiceName.WALLET);
+    const nonNodeServiceRunning = allRunningServices.some((service) => service !== ServiceName.BEACON);
 
-    if (mode === Mode.WALLET && !nonWalletServiceRunning) {
+    if (mode === Mode.NODE && !nonNodeServiceRunning) {
       window.ipcRenderer.invoke('setPromptOnQuit', false);
     } else {
       window.ipcRenderer.invoke('setPromptOnQuit', true);
@@ -136,35 +101,16 @@ export default function AppState(props: Props) {
       event.sender.send('daemon-exited');
     }
 
-    function handleRemovedCachedFile(e: any, hash: string) {
-      Object.keys({ ...localStorage }).forEach((key: string) => {
-        try {
-          const json = JSON.parse(localStorage.getItem(key)!);
-          if (json.binary === hash || json.video === hash || json.image === hash) {
-            localStorage.removeItem(key);
-            const nftId = key.replace('thumb-cache-', '').replace('metadata-cache-', '').replace('content-cache-', '');
-            NFTContextualActionsEventEmitter.emit(`force-reload-metadata-${nftId}`);
-            if (lru.get(nftId)) {
-              lru.delete(nftId);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      });
-    }
-
     if (isElectron()) {
       const { ipcRenderer } = window as unknown as { ipcRenderer: IpcRenderer };
 
       ipcRenderer.on('exit-daemon', handleClose);
-      ipcRenderer.on('removed-cache-file', handleRemovedCachedFile);
 
       // Handle files/URLs opened at launch now that the app is ready
       ipcRenderer.invoke('processLaunchTasks');
 
       if (isTestnet && !updatedWindowTitle) {
-        ipcRenderer.invoke('setWindowTitle', 'Chia Blockchain (Testnet)');
+        ipcRenderer.invoke('setWindowTitle', 'BPX Beacon Client (Testnet)');
         setUpdatedWindowTitle(true);
       }
 
@@ -174,7 +120,7 @@ export default function AppState(props: Props) {
       };
     }
     return undefined;
-  }, [close, closing, lru, isTestnet, updatedWindowTitle]);
+  }, [close, closing, isTestnet, updatedWindowTitle]);
 
   if (closing) {
     return (
@@ -211,33 +157,6 @@ export default function AppState(props: Props) {
         </LayoutHero>
       );
     }
-  }
-
-  if (isLoadingKeyringStatus || !keyringStatus) {
-    return (
-      <LayoutLoading>
-        <Typography variant="body1">
-          <Trans>Loading keyring status</Trans>
-        </Typography>
-      </LayoutLoading>
-    );
-  }
-
-  const { needsMigration, isKeyringLocked } = keyringStatus;
-  if (needsMigration) {
-    return (
-      <LayoutHero>
-        <AppKeyringMigrator />
-      </LayoutHero>
-    );
-  }
-
-  if (isKeyringLocked) {
-    return (
-      <LayoutHero>
-        <AppPassPrompt reason={PassphrasePromptReason.KEYRING_LOCKED} />
-      </LayoutHero>
-    );
   }
 
   if (!isConnected) {
@@ -296,5 +215,5 @@ export default function AppState(props: Props) {
     );
   }
 
-  return <AppAutoLogin>{children}</AppAutoLogin>;
+  return <>{children}</>;
 }

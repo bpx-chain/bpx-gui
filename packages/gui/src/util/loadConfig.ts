@@ -11,7 +11,7 @@ import untildify from './untildify';
 export function getConfigRootDir(net = 'mainnet'): string {
   const homedir = os.homedir();
 
-  return 'CHIA_ROOT' in process.env ? untildify(process.env.CHIA_ROOT) : path.join(homedir, '.chia', net);
+  return 'BPX_ROOT' in process.env ? untildify(process.env.BPX_ROOT) : path.join(homedir, '.bpxchain', 'beacon');
 }
 
 export function readConfigFile(net?: string): string {
@@ -29,7 +29,7 @@ export default async function loadConfig(net?: string): Promise<{
     const config = readConfigFile(net);
 
     const selfHostname = get(config, 'ui.daemon_host', 'localhost');
-    const daemonPort = get(config, 'ui.daemon_port', 55_400);
+    const daemonPort = get(config, 'ui.daemon_port', 8200);
 
     // store these in the global object so they can be used by both main and renderer processes
     const url = `wss://${selfHostname}:${daemonPort}`;

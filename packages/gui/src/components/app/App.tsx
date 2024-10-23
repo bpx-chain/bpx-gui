@@ -1,4 +1,4 @@
-import { ModeProvider, Persist } from '@chia-network/core';
+import { ModeProvider, Persist } from '@bpx-chain/core';
 import React from 'react';
 
 import AppRouter from './AppRouter';

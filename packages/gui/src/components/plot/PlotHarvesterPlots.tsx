@@ -1,6 +1,6 @@
-import { type Plot } from '@chia-network/api';
-import { useGetHarvesterPlotsValidQuery, useGetHarvesterQuery } from '@chia-network/api-react';
-import { Address, TableControlled, Flex, FormatBytes, Tooltip, StateColor } from '@chia-network/core';
+import { type Plot } from '@bpx-chain/api';
+import { useGetHarvesterPlotsValidQuery, useGetHarvesterQuery } from '@bpx-chain/api-react';
+import { TableControlled, Flex, FormatBytes, Tooltip, StateColor } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Warning as WarningIcon } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
@@ -52,15 +52,8 @@ const cols = [
   },
   {
     minWidth: '100px',
-    field: ({ poolContractPuzzleHash }: Plot) => (
-      <Address value={poolContractPuzzleHash} tooltip copyToClipboard>
-        {(address) => (
-          <Typography variant="body2" noWrap>
-            {address}
-          </Typography>
-        )}
-      </Address>
-    ),
+    field: 'poolContractPuzzleHash',
+    tooltip: 'poolContractPuzzleHash',
     title: <Trans>Pool Contract Address</Trans>,
   },
   {

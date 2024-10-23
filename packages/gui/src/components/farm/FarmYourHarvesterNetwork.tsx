@@ -1,7 +1,7 @@
-import type { Connection } from '@chia-network/api';
-import { ServiceName } from '@chia-network/api';
-import { useService, useGetHarvesterConnectionsQuery } from '@chia-network/api-react';
-import { Table, FormatBytes, FormatConnectionStatus, Card } from '@chia-network/core';
+import type { Connection } from '@bpx-chain/api';
+import { ServiceName } from '@bpx-chain/api';
+import { useService, useGetHarvesterConnectionsQuery } from '@bpx-chain/api-react';
+import { Table, FormatBytes, FormatConnectionStatus, Card } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { Typography, Tooltip, IconButton } from '@mui/material';
@@ -76,7 +76,7 @@ export default function FarmYourHarvesterNetwork() {
       tooltip={
         <Trans>
           A harvester is a service running on a machine where plot(s) are actually stored. A farmer and harvester talk
-          to a full node to see the state of the chain. View your network of connected harvesters below Learn more
+          to a beacon client to see the state of the chain. View your network of connected harvesters below Learn more
         </Trans>
       }
       transparent

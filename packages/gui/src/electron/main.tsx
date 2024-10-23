@@ -9,14 +9,12 @@ import {
   IncomingMessage,
   Menu,
   nativeImage,
-  Notification,
   protocol,
 } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
 
-import { NFTInfo } from '@chia-network/api';
 import { initialize, enable } from '@electron/remote/main';
 import axios from 'axios';
 import chokidar from 'chokidar';
@@ -30,17 +28,17 @@ import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 // handle setupevents as quickly as possible
 import '../config/env';
 import packageJson from '../../package.json';
-import AppIcon from '../assets/img/chia64x64.png';
+import AppIcon from '../assets/img/bpx64x64.png';
 import About from '../components/about/About';
 import { i18n } from '../config/locales';
-import chiaEnvironment from '../util/chiaEnvironment';
+import bpxEnvironment from '../util/bpxEnvironment';
 import computeHash from '../util/computeHash';
 import loadConfig from '../util/loadConfig';
 import manageDaemonLifetime from '../util/manageDaemonLifetime';
 import { setUserDataDir } from '../util/userData';
 import { parseExtensionFromUrl } from '../util/utils';
 import handleSquirrelEvent from './handleSquirrelEvent';
-import { readPrefs, savePrefs, migratePrefs } from './prefs';
+import { readPrefs, savePrefs } from './prefs';
 
 const isPlaywrightTesting = process.env.PLAYWRIGHT_TESTS === 'true';
 const NET = 'mainnet';
@@ -51,41 +49,12 @@ app.commandLine.appendSwitch('disable-http-cache');
 initialize();
 
 const appIcon = nativeImage.createFromPath(path.join(__dirname, AppIcon));
-const defaultThumbCacheFolder = path.join(app.getPath('cache'), app.getName());
-let thumbCacheFolder = defaultThumbCacheFolder;
-
-if (!fs.existsSync(defaultThumbCacheFolder)) {
-  fs.mkdirSync(defaultThumbCacheFolder);
-}
 
 let mainWindow: BrowserWindow | null = null;
 
 let watcher;
 
-let currentDownloadRequest: any;
-let abortDownloadingFiles: boolean = false;
-
-function watchCacheFolder(folder: string) {
-  function watchFolder(f) {
-    watcher = chokidar.watch(f, { persistent: true });
-    watcher.on('unlink', (pathLocal: any) => {
-      mainWindow?.webContents.send('removed-cache-file', pathLocal.split('/').splice(-1, 1)[0]);
-    });
-  }
-  if (folder) {
-    if (watcher) {
-      watcher.close().then(() => {
-        watchFolder(folder);
-      });
-    } else {
-      watchFolder(folder);
-    }
-  }
-}
-
-let cacheLimitSize: number = 1024;
-
-// Set the userData directory to its location within CHIA_ROOT/gui
+// Set the userData directory to its location within BPX_ROOT/gui
 setUserDataDir();
 
 function renderAbout(): string {
@@ -171,7 +140,7 @@ if (!handleSquirrelEvent()) {
 
   const ensureCorrectEnvironment = () => {
     // check that the app is either packaged or running in the python venv
-    if (!chiaEnvironment.guessPackaged() && !('VIRTUAL_ENV' in process.env)) {
+    if (!bpxEnvironment.guessPackaged() && !('VIRTUAL_ENV' in process.env)) {
       app.quit();
       return false;
     }
@@ -197,7 +166,7 @@ if (!handleSquirrelEvent()) {
 
     const createWindow = async () => {
       if (manageDaemonLifetime(NET)) {
-        chiaEnvironment.startChiaDaemon();
+        bpxEnvironment.startBpxDaemon();
       }
 
       ipcMain.handle('getConfig', () => loadConfig(NET));
@@ -214,19 +183,6 @@ if (!handleSquirrelEvent()) {
         promptOnQuit = false;
         app.quit();
       });
-
-      ipcMain.handle(
-        'showNotification',
-        async (
-          _event,
-          options: {
-            title: string;
-            body: string;
-          }
-        ) => {
-          new Notification(options).show();
-        }
-      );
 
       ipcMain.handle('fetchTextResponse', async (_event, requestOptions, requestHeaders, requestData) => {
         const request = net.request(requestOptions as any);
@@ -321,323 +277,11 @@ if (!handleSquirrelEvent()) {
         return undefined;
       });
 
-      ipcMain.handle(
-        'fetchBinaryContent',
-        async (_event, requestOptions = {}, requestHeaders = {}, requestData?: any) => {
-          const { maxSize = Infinity, ...rest } = requestOptions;
-
-          if (allRequests[rest.url]) {
-            return allRequests[rest.url].promise;
-          }
-
-          const request = net.request(rest);
-
-          async function processUri() {
-            let wasCached = false;
-            let error: Error | undefined;
-            let statusCode: number | undefined;
-            let statusMessage: string | undefined;
-            let contentType: string | undefined;
-            let encoding = 'binary';
-            let dataObject: { isValid?: boolean; content: string } = {
-              content: '',
-            };
-
-            const nftIdUrl = `${rest.nftId}_${rest.url}`;
-            const fileOnDisk = path.join(thumbCacheFolder, computeHash(nftIdUrl, { encoding: 'utf-8' }));
-            let fileStream: fs.WriteStream | undefined;
-
-            try {
-              Object.entries(requestHeaders).forEach(([header, value]: [string, any]) => {
-                request.setHeader(header, value);
-              });
-
-              const buffers: Buffer[] = [];
-              let totalLength = 0;
-
-              /* GET FILE SIZE */
-              let fileSize = 0;
-              try {
-                fileSize = await getRemoteFileSize(rest.url);
-              } catch (e) {
-                // Not critical, knowing the file size up front is just a performance optimization
-              }
-              dataObject = await new Promise((resolve, reject) => {
-                request.on('response', (response: IncomingMessage) => {
-                  fileStream = fs.createWriteStream(fileOnDisk);
-                  if (!fileStream) {
-                    reject(new Error('Error creating file stream'));
-                  }
-
-                  statusCode = response.statusCode;
-                  statusMessage = response.statusMessage;
-
-                  const rawContentType = response.headers['content-type'];
-                  if (rawContentType) {
-                    if (Array.isArray(rawContentType)) {
-                      [contentType] = rawContentType;
-                    } else {
-                      contentType = rawContentType;
-                    }
-
-                    if (contentType) {
-                      // extract charset from contentType
-                      const charsetMatch = contentType.match(/charset=([^;]+)/);
-                      if (charsetMatch) {
-                        [, encoding] = charsetMatch;
-                      }
-                    }
-                  }
-
-                  response.on('data', (chunk) => {
-                    buffers.push(chunk);
-
-                    if (fileStream) {
-                      fileStream.write(chunk);
-                    }
-                    totalLength += chunk.byteLength;
-
-                    if (fileSize > 0) {
-                      mainWindow?.webContents.send('fetchBinaryContentProgress', {
-                        nftIdUrl,
-                        progress: totalLength / fileSize,
-                      });
-                    }
-                    if (totalLength > maxSize || fileSize > maxSize) {
-                      if (request) {
-                        request.abort();
-                        if (fs.existsSync(fileOnDisk)) {
-                          fs.unlinkSync(fileOnDisk);
-                        }
-                      }
-                      reject(new Error('Response too large'));
-                    }
-                  });
-
-                  response.on('end', () => {
-                    let content;
-                    // special case for iso-8859-1, which is mapped to 'latin1' in node
-                    if (encoding.toLowerCase() === 'iso-8859-1') {
-                      encoding = 'latin1';
-                    }
-                    try {
-                      content = Buffer.concat(buffers).toString(encoding as BufferEncoding);
-                    } catch (e: any) {
-                      console.error(`Failed to convert data to string using encoding ${encoding}: ${e.message}`);
-                    }
-                    if (fileStream) {
-                      fileStream.end();
-                      fileStream = undefined;
-                    }
-                    getChecksum(fileOnDisk).then((checksum) => {
-                      const isValid = (checksum as string).replace(/^0x/, '') === rest.dataHash.replace(/^0x/, '');
-                      if (rest.forceCache) {
-                        /* should we cache it or delete it? */
-                        if (shouldCacheFile(fileOnDisk)) {
-                          wasCached = true;
-                        } else if (fs.existsSync(fileOnDisk)) {
-                          fs.unlinkSync(fileOnDisk);
-                        }
-                        mainWindow?.webContents.send('fetchBinaryContentDone', {
-                          nftIdUrl,
-                          valid: isValid,
-                        });
-                        const extension = parseExtensionFromUrl(rest.url);
-                        resolve({
-                          isValid,
-                          content: extension === 'svg' ? content : '',
-                        });
-                      } else {
-                        resolve({ isValid, content });
-                      }
-                    });
-                    delete allRequests[rest.url];
-                  });
-
-                  response.on('error', (e: string) => {
-                    if (fileStream) {
-                      fileStream.end();
-                      fileStream = undefined;
-                    }
-                    reject(new Error(e));
-                  });
-                });
-
-                request.on('error', (err: any) => {
-                  if (fileStream) {
-                    fileStream.end();
-                    fileStream = undefined;
-                  }
-                  reject(err);
-                });
-
-                if (requestData) {
-                  request.write(requestData);
-                }
-
-                request.end();
-              });
-            } catch (e: any) {
-              if (fileStream) {
-                fileStream.end();
-                fileStream = undefined;
-              }
-
-              if (fs.existsSync(fileOnDisk)) {
-                fs.unlinkSync(fileOnDisk);
-              }
-              delete allRequests[rest.url];
-              error = e;
-            } finally {
-              if (fileStream) {
-                fileStream.end();
-                fileStream = undefined;
-              }
-            }
-
-            return {
-              error,
-              statusCode,
-              statusMessage,
-              encoding,
-              dataObject,
-              wasCached,
-            };
-          }
-
-          const promise = processUri();
-
-          allRequests[rest.url] = {
-            abort: () => request.abort(),
-            promise,
-          };
-
-          return promise;
-        }
-      );
-
       ipcMain.handle('showMessageBox', async (_event, options) => dialog.showMessageBox(mainWindow, options));
 
       ipcMain.handle('showOpenDialog', async (_event, options) => dialog.showOpenDialog(options));
 
       ipcMain.handle('showSaveDialog', async (_event, options) => dialog.showSaveDialog(options));
-
-      ipcMain.handle('download', async (_event, options) => {
-        if (mainWindow) {
-          return mainWindow.webContents.downloadURL(options.url);
-        }
-        console.error('mainWindow was not initialized');
-        return undefined;
-      });
-
-      ipcMain.handle('selectMultipleDownloadFolder', async (_event: any) =>
-        dialog.showOpenDialog({
-          properties: ['openDirectory'],
-          defaultPath: app.getPath('downloads'),
-        })
-      );
-
-      type DownloadFileWithProgressProps = {
-        folder: string;
-        nft: NFTInfo;
-        current: number;
-        total: number;
-      };
-
-      function downloadFileWithProgress(props: DownloadFileWithProgressProps): Promise<number> {
-        const { folder, nft, current, total } = props;
-        const uri = nft.dataUris[0];
-        return new Promise((resolve, reject) => {
-          getRemoteFileSize(uri)
-            .then((fileSize: number) => {
-              let totalLength = 0;
-              currentDownloadRequest = net.request(uri);
-              currentDownloadRequest.on('response', (response: IncomingMessage) => {
-                let fileName: string = '';
-                /* first try to get file name from server headers */
-                const disposition = response.headers['content-disposition'];
-                if (disposition && typeof disposition === 'string') {
-                  const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                  const matches = filenameRegex.exec(disposition);
-                  if (matches != null && matches[1]) {
-                    fileName = matches[1].replace(/['"]/g, '');
-                  }
-                }
-                /* if we didn't get file name from server headers, then parse it from uri */
-                fileName = fileName || uri.replace(/\/$/, '').split('/').splice(-1, 1)[0];
-                currentDownloadRequest.on('abort', () => {
-                  reject(new Error('download aborted'));
-                });
-
-                /* if there is already a file with that name in this folder, add nftId to the file name */
-                if (fs.existsSync(path.join(folder, fileName))) {
-                  fileName = `${fileName}-${nft.$nftId}`;
-                }
-
-                const fileStream = fs.createWriteStream(path.join(folder, fileName));
-                response.on('data', (chunk) => {
-                  fileStream.write(chunk);
-                  totalLength += chunk.byteLength;
-                  if (fileSize > 0) {
-                    mainWindow?.webContents.send('downloadProgress', {
-                      url: nft.dataUris[0],
-                      nftId: nft.$nftId,
-                      progress: totalLength / fileSize,
-                      i: current,
-                      total,
-                    });
-                  }
-                });
-                response.on('end', () => {
-                  if (fileStream) {
-                    fileStream.end();
-                  }
-                  resolve(totalLength);
-                });
-              });
-              currentDownloadRequest.end();
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        });
-      }
-
-      ipcMain.handle('startMultipleDownload', async (_event: any, options: any) => {
-        /* eslint no-await-in-loop: off -- we want to handle each file separately! */
-        let totalDownloadedSize = 0;
-        let successFileCount = 0;
-        let errorFileCount = 0;
-        for (let i = 0; i < options.nfts.length; i++) {
-          let fileSize;
-          try {
-            fileSize = await downloadFileWithProgress({
-              folder: options.folder,
-              nft: options.nfts[i],
-              current: i,
-              total: options.nfts.length,
-            });
-            totalDownloadedSize += fileSize;
-            successFileCount++;
-          } catch (e: any) {
-            if (e.message === 'download aborted' && abortDownloadingFiles) {
-              break;
-            }
-            mainWindow?.webContents.send('errorDownloadingUrl', options.nfts[i]);
-            errorFileCount++;
-          }
-        }
-        abortDownloadingFiles = false;
-        mainWindow?.webContents.send('multipleDownloadDone', { totalDownloadedSize, successFileCount, errorFileCount });
-        return true;
-      });
-
-      ipcMain.handle('abortDownloadingFiles', async (_event: any) => {
-        abortDownloadingFiles = true;
-        if (currentDownloadRequest) {
-          currentDownloadRequest.abort();
-        }
-      });
 
       ipcMain.handle('processLaunchTasks', async (_event) => {
         const tasks = [...mainWindowLaunchTasks];
@@ -647,112 +291,10 @@ if (!handleSquirrelEvent()) {
         tasks.forEach((task) => task(mainWindow!));
       });
 
-      /* ========================== CACHE FOLDER ================================ */
-      function getCacheSize() {
-        let folderSize: number = 0;
-        const files = fs.readdirSync(thumbCacheFolder);
-
-        files
-          .filter(
-            (file) =>
-              /* skip files that start with a dot */
-              !file.match(/^\./)
-          )
-          .forEach((file) => {
-            const stats = fs.statSync(path.join(thumbCacheFolder, file));
-            folderSize += stats.size;
-          });
-        return folderSize;
-      }
-      ipcMain.handle('getDefaultCacheFolder', (_event) => thumbCacheFolder);
-
-      ipcMain.handle('setCacheFolder', (_event, newFolder) => {
-        thumbCacheFolder = newFolder;
-      });
-
-      ipcMain.handle('selectCacheFolder', async (_event) =>
-        dialog.showOpenDialog({
-          properties: ['openDirectory'],
-          defaultPath: thumbCacheFolder,
-        })
-      );
-
-      ipcMain.handle('changeCacheFolderFromTo', async (_event, [from, to]) => {
-        const fromFolder = from || thumbCacheFolder;
-        if (fs.existsSync(fromFolder)) {
-          const fileStats = fs.statSync(fromFolder);
-          if (fileStats.isDirectory()) {
-            const files = fs.readdirSync(fromFolder);
-            files.forEach((file) => {
-              if (fs.lstatSync(path.join(fromFolder, file)).isFile()) {
-                fs.renameSync(path.join(fromFolder, file), path.join(to, file));
-              }
-            });
-          }
-          watchCacheFolder(to);
-        }
-
-        thumbCacheFolder = to;
-      });
-
-      ipcMain.handle('getCacheSize', async (_event) => getCacheSize());
-
-      ipcMain.handle(
-        'isNewFolderEmtpy',
-        (_event, selectedFolder) =>
-          fs.readdirSync(selectedFolder).filter(
-            (file) =>
-              /* skip files that start with a dot */
-              !file.match(/^\./)
-          ).length
-      );
-
-      ipcMain.handle('adjustCacheLimitSize', async (_event, { newSize, cacheInstances }) => {
-        if (newSize) {
-          cacheLimitSize = newSize;
-        }
-        let overSize = getCacheSize() - newSize * 1024 * 1024; /* MiB! */
-
-        if (overSize > 0) {
-          const removedEntries: any[] = [];
-          for (let cnt = 0; cnt < cacheInstances.length; cnt++) {
-            const fileString = cacheInstances[cnt].video || cacheInstances[cnt].image || cacheInstances[cnt].binary;
-            if (fileString) {
-              const filePath = path.join(thumbCacheFolder, fileString);
-              if (fs.existsSync(filePath)) {
-                const fileStats = fs.statSync(filePath);
-                fs.unlinkSync(filePath);
-                overSize -= fileStats.size;
-                removedEntries.push(cacheInstances[cnt]);
-              }
-            }
-            if (overSize < 0) break;
-          }
-          mainWindow?.webContents.send('removedFromLocalStorage', {
-            removedEntries,
-            occupied: getCacheSize(),
-          });
-        }
-      });
-
       ipcMain.handle('readPrefs', async (_event) => readPrefs());
 
       ipcMain.handle('savePrefs', async (_event, prefsObj) => {
         savePrefs(prefsObj);
-      });
-
-      ipcMain.handle('migratePrefs', async (_event, prefsObj) => migratePrefs(prefsObj));
-
-      ipcMain.handle('getCacheFilenames', (_event) => fs.readdirSync(thumbCacheFolder));
-
-      ipcMain.handle('clearNFTCache', (_event) => {
-        if (fs.existsSync(thumbCacheFolder)) {
-          const files = fs.readdirSync(thumbCacheFolder);
-          for (let i = 0; i < files.length; i++) {
-            fs.unlinkSync(path.join(thumbCacheFolder, files[i]));
-          }
-        }
-        return true;
       });
 
       /* ======================================================================== */
@@ -845,7 +387,11 @@ if (!handleSquirrelEvent()) {
 
       const startUrl =
         process.env.NODE_ENV === 'development'
-          ? 'http://localhost:3000'
+          ? url.format({
+              pathname: path.join(__dirname, '/../renderer/index.html'),
+              protocol: 'file:',
+              slashes: true,
+            })
           : url.format({
               pathname: path.join(__dirname, '/../renderer/index.html'),
               protocol: 'file:',
@@ -859,34 +405,7 @@ if (!handleSquirrelEvent()) {
     const appReady = async () => {
       createWindow();
       app.applicationMenu = createMenu();
-      protocol.registerFileProtocol('cached', (request: any, callback: (obj: any) => void) => {
-        const filePath: string = path.join(thumbCacheFolder, request.url.replace(/^cached:\/\//, ''));
-        callback({ path: filePath });
-      });
       const prefs = readPrefs();
-      thumbCacheFolder = prefs.cacheFolder || defaultThumbCacheFolder;
-      watchCacheFolder(thumbCacheFolder);
-
-      if (prefs.cacheLimitSize !== undefined) {
-        try {
-          const prefsCacheLimitSize = +prefs.cacheLimitSize;
-          if (!Number.isNaN(prefsCacheLimitSize) && Number.isFinite(prefsCacheLimitSize) && prefsCacheLimitSize > 0) {
-            cacheLimitSize = prefsCacheLimitSize;
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
-      if (prefs.cacheFolder !== undefined) {
-        try {
-          const prefsCacheFolder = prefs.cacheFolder;
-          if (fs.existsSync(prefsCacheFolder)) {
-            thumbCacheFolder = prefsCacheFolder;
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
     };
 
     app.on('ready', appReady);
@@ -1005,12 +524,6 @@ function getMenuTemplate() {
               accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
               click: () => mainWindow.toggleDevTools(),
             },
-            // {
-            // label: isSimulator
-            //  ? i18n._(/* i18n */ { id: 'Disable Simulator' })
-            //   : i18n._(/* i18n */ { id: 'Enable Simulator' }),
-            // click: () => toggleSimulatorMode(),
-            // },
           ],
         },
         {
@@ -1053,62 +566,17 @@ function getMenuTemplate() {
       label: i18n._(/* i18n */ { id: 'Help' }),
       role: 'help',
       submenu: [
-        {
-          label: i18n._(/* i18n */ { id: 'Chia Blockchain Wiki' }),
-          click: () => {
-            openExternal('https://github.com/Chia-Network/chia-blockchain/wiki');
-          },
-        },
-        {
-          label: i18n._(/* i18n */ { id: 'Frequently Asked Questions' }),
-          click: () => {
-            openExternal('https://github.com/Chia-Network/chia-blockchain/wiki/FAQ');
-          },
-        },
-        {
-          label: i18n._(/* i18n */ { id: 'Release Notes' }),
-          click: () => {
-            openExternal('https://github.com/Chia-Network/chia-blockchain/releases');
-          },
-        },
-        {
-          label: i18n._(/* i18n */ { id: 'Contribute on GitHub' }),
-          click: () => {
-            openExternal('https://github.com/Chia-Network/chia-blockchain/blob/main/CONTRIBUTING.md');
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: i18n._(/* i18n */ { id: 'Report an Issue...' }),
-          click: () => {
-            openExternal('https://github.com/Chia-Network/chia-blockchain/issues');
-          },
-        },
-        {
-          label: i18n._(/* i18n */ { id: 'Chat on KeyBase' }),
-          click: () => {
-            openExternal('https://keybase.io/team/chia_network.public');
-          },
-        },
-        {
-          label: i18n._(/* i18n */ { id: 'Follow on Twitter' }),
-          click: () => {
-            openExternal('https://twitter.com/chia_project');
-          },
-        },
       ],
     },
   ];
 
   if (process.platform === 'darwin') {
-    // Chia Blockchain menu (Mac)
+    // BPX Beacon Client menu (Mac)
     template.unshift({
-      label: i18n._(/* i18n */ { id: 'Chia' }),
+      label: i18n._(/* i18n */ { id: 'BPX' }),
       submenu: [
         {
-          label: i18n._(/* i18n */ { id: 'About Chia Blockchain' }),
+          label: i18n._(/* i18n */ { id: 'About BPX Beacon Client' }),
           click: () => {
             openAbout();
           },
@@ -1195,7 +663,7 @@ function getMenuTemplate() {
         type: 'separator',
       },
       {
-        label: i18n._(/* i18n */ { id: 'About Chia Blockchain' }),
+        label: i18n._(/* i18n */ { id: 'About BPX Beacon Client' }),
         click() {
           openAbout();
         },
@@ -1207,7 +675,7 @@ function getMenuTemplate() {
 }
 
 /**
- * Open the given external protocol URL in the desktop’s default manner.
+ * Open the given external protocol URL in the desktops default manner.
  */
 function openExternal(urlLocal) {
   shell.openExternal(urlLocal);

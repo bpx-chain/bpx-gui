@@ -1,23 +1,28 @@
-import { ServiceName } from '@chia-network/api';
-import { useService } from '@chia-network/api-react';
+import { ServiceName } from '@bpx-chain/api';
+import { useService } from '@bpx-chain/api-react';
 
 import FarmerStatus from '../constants/FarmerStatus';
-import FullNodeState from '../constants/FullNodeState';
-import useFullNodeState from './useFullNodeState';
+import BeaconState from '../constants/BeaconState';
+import useBeaconState from './useBeaconState';
 
 export default function useFarmerStatus(): FarmerStatus {
-  const { state: fullNodeState, isLoading: isLoadingFullNodeState } = useFullNodeState();
+  const {
+    state: beaconState,
+    isLoading: isLoadingBeaconState,
+    ecConnected: ecConnected,
+    ecSynced: ecSynced,
+  } = useBeaconState();
 
   const { isRunning, isLoading: isLoadingIsRunning } = useService(ServiceName.FARMER);
 
-  const isLoading = isLoadingIsRunning || isLoadingFullNodeState;
+  const isLoading = isLoadingIsRunning || isLoadingBeaconState;
 
-  if (fullNodeState === FullNodeState.SYNCHING) {
-    return FarmerStatus.SYNCHING;
-  }
-
-  if (fullNodeState === FullNodeState.ERROR) {
+  if (beaconState === BeaconState.ERROR || !ecConnected) {
     return FarmerStatus.NOT_AVAILABLE;
+  }
+  
+  if (beaconState === BeaconState.SYNCHING || !ecSynced) {
+    return FarmerStatus.SYNCHING;
   }
 
   if (isLoading /* || !farmerConnected */) {

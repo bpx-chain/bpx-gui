@@ -1,4 +1,4 @@
-import { store, api } from '@chia-network/api-react';
+import { store, api } from '@bpx-chain/api-react';
 import {
   useDarkMode,
   sleep,
@@ -10,7 +10,7 @@ import {
   dark,
   light,
   ErrorBoundary,
-} from '@chia-network/core';
+} from '@bpx-chain/core';
 import { nativeTheme } from '@electron/remote';
 import { Trans } from '@lingui/macro';
 import { Typography } from '@mui/material';
@@ -21,9 +21,6 @@ import { Outlet } from 'react-router-dom';
 import WebSocket from 'ws';
 
 import { i18n, defaultLocale, locales } from '../../config/locales';
-import LRUsProvider from '../lrus/LRUsProvider';
-import NotificationsProvider from '../notification/NotificationsProvider';
-import WalletConnectProvider, { WalletConnectChiaProjectId } from '../walletConnect/WalletConnectProvider';
 import AppState from './AppState';
 
 async function waitForConfig() {
@@ -79,27 +76,21 @@ export default function App(props: AppProps) {
       <LocaleProvider i18n={i18n} defaultLocale={defaultLocale} locales={locales}>
         <ThemeProvider theme={theme} fonts global>
           <ErrorBoundary>
-            <LRUsProvider>
-              <ModalDialogsProvider>
-                {isReady ? (
-                  <Suspense fallback={<LayoutLoading />}>
-                    <WalletConnectProvider projectId={WalletConnectChiaProjectId}>
-                      <NotificationsProvider>
-                        <AppState>{outlet ? <Outlet /> : children}</AppState>
-                        <ModalDialogs />
-                      </NotificationsProvider>
-                    </WalletConnectProvider>
-                  </Suspense>
-                ) : (
-                  <LayoutLoading>
-                    <Typography variant="body1">
-                      <Trans>Loading configuration</Trans>
-                    </Typography>
-                    <ModalDialogs />
-                  </LayoutLoading>
-                )}
-              </ModalDialogsProvider>
-            </LRUsProvider>
+            <ModalDialogsProvider>
+              {isReady ? (
+                <Suspense fallback={<LayoutLoading />}>
+                  <AppState>{outlet ? <Outlet /> : children}</AppState>
+                  <ModalDialogs />
+                </Suspense>
+              ) : (
+                <LayoutLoading>
+                  <Typography variant="body1">
+                    <Trans>Loading configuration</Trans>
+                  </Typography>
+                  <ModalDialogs />
+                </LayoutLoading>
+              )}
+            </ModalDialogsProvider>
           </ErrorBoundary>
         </ThemeProvider>
       </LocaleProvider>

@@ -1,12 +1,12 @@
-import { Harvester } from '@chia-network/api';
-import type { Plot } from '@chia-network/api';
+import { Harvester } from '@bpx-chain/api';
+import type { Plot, HarvesterConfig } from '@bpx-chain/api';
 
 import { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';
 import { apiWithTag } from './farmer';
 
 const apiWithTag2 = apiWithTag.enhanceEndpoints({
-  addTagTypes: ['Plots', 'PlotDirectories'],
+  addTagTypes: ['Plots', 'PlotDirectories', 'HarvesterConfig'],
 });
 
 export const harvesterApi = apiWithTag2.injectEndpoints({
@@ -37,6 +37,7 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
         },
       ]),
     }),
+    
     refreshPlots: build.mutation<undefined, {}>({
       query: () => ({
         command: 'refreshPlots',
@@ -118,6 +119,7 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
             ]
           : [{ type: 'PlotDirectories', id: 'LIST' }],
     }),
+    
     addPlotDirectory: build.mutation<
       Object,
       {
@@ -134,6 +136,7 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
         { type: 'PlotDirectories', id: dirname },
       ],
     }),
+    
     removePlotDirectory: build.mutation<
       Object,
       {
@@ -150,6 +153,53 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
         { type: 'PlotDirectories', id: dirname },
       ],
     }),
+    
+    getHarvesterConfig: build.query<HarvesterConfig, {}>({
+      query: () => ({
+        command: 'getHarvesterConfig',
+        service: Harvester,
+      }),
+      providesTags: ['harvesterConfig'],
+    }),
+    
+    updateHarvesterConfig: build.mutation<
+      boolean,
+      {
+        useGpuHarvesting?: boolean;
+        gpuIndex?: number;
+        enforceGpuIndex?: boolean;
+        disableCpuAffinity?: boolean;
+        parallelDecompressorCount?: number;
+        decompressorThreadCount?: number;
+        recursivePlotScan?: boolean;
+        refreshParameterIntervalSeconds?: number;
+      }
+    >({
+      query: ({
+        useGpuHarvesting,
+        gpuIndex,
+        enforceGpuIndex,
+        disableCpuAffinity,
+        parallelDecompressorCount,
+        decompressorThreadCount,
+        recursivePlotScan,
+        refreshParameterIntervalSeconds,
+      }) => ({
+        command: 'updateHarvesterConfig',
+        service: Harvester,
+        args: [
+          useGpuHarvesting,
+          gpuIndex,
+          enforceGpuIndex,
+          disableCpuAffinity,
+          parallelDecompressorCount,
+          decompressorThreadCount,
+          recursivePlotScan,
+          refreshParameterIntervalSeconds,
+        ],
+      }),
+      invalidatesTags: ['harvesterConfig'],
+    }),
   }),
 });
 
@@ -161,4 +211,6 @@ export const {
   useGetPlotDirectoriesQuery,
   useAddPlotDirectoryMutation,
   useRemovePlotDirectoryMutation,
+  useGetHarvesterConfigQuery,
+  useUpdateHarvesterConfigMutation,
 } = harvesterApi;

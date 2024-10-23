@@ -18,7 +18,6 @@ type PlotAdd = {
   overrideK?: boolean;
   farmerPublicKey?: string;
   poolPublicKey?: string;
-  c: string;
 };
 
 export default PlotAdd;

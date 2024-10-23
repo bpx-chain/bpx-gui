@@ -52,13 +52,6 @@ export default class ErrorBoundary extends Component {
   render() {
     if (this.state.error) {
       const { stacktrace, error } = this.state;
-      const issueLink = `https://github.com/Chia-Network/chia-blockchain-gui/issues/new?${qs.stringify({
-        labels: 'bug',
-        template: 'bug_report.yaml',
-        title: `[BUG] ${error.message}`,
-        ui: 'GUI',
-        logs: `${error.message}\n\nURL\n${window.location.hash}\n\nStacktrace\n${stacktrace}`,
-      })}`;
       // You can render any custom fallback UI
       return (
         <LayoutHero>
@@ -75,12 +68,6 @@ export default class ErrorBoundary extends Component {
             </Flex>
 
             <Flex justifyContent="center">
-              <Link target="_blank" href={issueLink}>
-                <Button>
-                  <Trans>Report an Issue</Trans>
-                </Button>
-              </Link>
-              &nbsp;
               <Button onClick={this.handleReload} color="primary">
                 <Trans>Reload Application</Trans>
               </Button>

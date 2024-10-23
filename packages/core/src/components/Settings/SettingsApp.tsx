@@ -1,11 +1,13 @@
 import { type Shell } from 'electron';
 
-import { Farming } from '@chia-network/icons';
+import {
+  Farming as FarmingIcon,
+  Beacon as BeaconIcon,
+} from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import {
   WbSunny as WbSunnyIcon,
   NightsStay as NightsStayIcon,
-  AccountBalanceWallet as AccountBalanceWalletIcon,
 } from '@mui/icons-material';
 import { ButtonGroup } from '@mui/material';
 import React, { type ReactNode } from 'react';
@@ -35,26 +37,8 @@ export default function SettingsApp(props: SettingsAppProps) {
     setMode(Mode.FARMING);
   }
 
-  function handleSetWalletMode() {
-    setMode(Mode.WALLET);
-  }
-
-  async function handleOpenFAQURL(): Promise<void> {
-    try {
-      const { shell } = window as unknown as { shell: Shell };
-      await shell.openExternal('https://github.com/Chia-Network/chia-blockchain/wiki/FAQ');
-    } catch (error: any) {
-      showError(error);
-    }
-  }
-
-  async function handleOpenSendFeedbackURL(): Promise<void> {
-    try {
-      const { shell } = window as unknown as { shell: Shell };
-      await shell.openExternal('https://feedback.chia.net/lightwallet');
-    } catch (error: any) {
-      showError(error);
-    }
+  function handleSetNodeMode() {
+    setMode(Mode.NODE);
   }
 
   return (
@@ -65,7 +49,7 @@ export default function SettingsApp(props: SettingsAppProps) {
         </SettingsLabel>
         <ButtonGroup fullWidth>
           <Button
-            startIcon={<Farming />}
+            startIcon={<FarmingIcon />}
             selected={mode === Mode.FARMING}
             onClick={handleSetFarmingMode}
             data-testid="SettingsApp-mode-farming"
@@ -73,12 +57,12 @@ export default function SettingsApp(props: SettingsAppProps) {
             <Trans>Farming</Trans>
           </Button>
           <Button
-            startIcon={<AccountBalanceWalletIcon />}
-            selected={mode === Mode.WALLET}
-            onClick={handleSetWalletMode}
-            data-testid="SettingsApp-mode-wallet"
+            startIcon={<BeaconIcon />}
+            selected={mode === Mode.NODE}
+            onClick={handleSetNodeMode}
+            data-testid="SettingsApp-mode-node"
           >
-            <Trans>Wallet</Trans>
+            <Trans>Node</Trans>
           </Button>
         </ButtonGroup>
       </Flex>
@@ -115,20 +99,6 @@ export default function SettingsApp(props: SettingsAppProps) {
       </Flex>
 
       {children}
-
-      <Flex flexDirection="column" gap={1}>
-        <SettingsLabel>
-          <Trans>Help</Trans>
-        </SettingsLabel>
-        <Flex flexDirection="column">
-          <Link onClick={handleOpenFAQURL} data-testid="SettingsApp-faq">
-            <Trans>Frequently Asked Questions</Trans>
-          </Link>
-          <Link onClick={handleOpenSendFeedbackURL} data-testid="SettingsApp-send-feedback">
-            <Trans>Send Feedback</Trans>
-          </Link>
-        </Flex>
-      </Flex>
     </Flex>
   );
 }

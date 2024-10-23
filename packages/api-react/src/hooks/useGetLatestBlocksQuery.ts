@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 
-import { useGetBlockchainStateQuery, useGetBlockRecordsQuery } from '../services/fullNode';
+import { useGetBlockchainStateQuery, useGetBlockRecordsQuery } from '../services/beacon';
 
 export default function useGetLatestBlocksQuery(count = 10) {
   const { data: state, isLoading: isLoadingBlockchainState, ...rest } = useGetBlockchainStateQuery();

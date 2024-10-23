@@ -1,11 +1,14 @@
-import { AlertDialog, Flex, Tooltip, useCurrencyCode, useOpenDialog } from '@chia-network/core';
+import { AlertDialog, Flex, Tooltip, useOpenDialog } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 
+import useIsMainnet from '../../hooks/useIsMainnet';
+
 export default function AppTestnetIndicator() {
-  const isTestnet = useCurrencyCode() === 'TXCH';
+  const isMainnet = useIsMainnet();
+  const isTestnet = isMainnet === undefined ? false : (isMainnet ? false : true);
   const theme = useTheme();
   const borderColor = (theme.palette as any).colors.blue.border;
   const [clickCount, setClickCount] = useState(0);

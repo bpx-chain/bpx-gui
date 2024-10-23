@@ -5,13 +5,16 @@ interface CommonOptions {
   canPlotInParallel: boolean;
   canDelayParallelPlots: boolean;
   canSetBufferSize: boolean;
+  haveTempDir: boolean;
+  haveTempDir2: boolean;
+  isTempDirRequired: boolean;
 }
 
 interface BladeBitRamOptions extends CommonOptions {
   haveBladebitWarmStart: boolean;
   haveBladebitDisableNUMA: boolean;
   haveBladebitNoCpuAffinity: boolean;
-  haveBladebitOutputDir: boolean;
+  haveBladebitCompressionLevel: boolean;
 }
 
 interface BladeBitDiskOptions extends BladeBitRamOptions {
@@ -26,13 +29,23 @@ interface BladeBitDiskOptions extends BladeBitRamOptions {
   haveBladebitDiskNoT2Direct: boolean;
 }
 
+interface BladeBitCudaOptions extends BladeBitRamOptions {
+  haveBladebitDeviceIndex: boolean;
+  haveBladebitDisk128Mode: boolean;
+  haveBladebitDisk16Mode: boolean;
+}
+
 interface MadMaxOptions extends CommonOptions {
   haveMadmaxNumBucketsPhase3: boolean;
   haveMadmaxThreadMultiplier: boolean;
   haveMadmaxTempToggle: boolean;
 }
 
-export type PlotterOptions = CommonOptions & BladeBitRamOptions & BladeBitDiskOptions & MadMaxOptions;
+export type PlotterOptions = CommonOptions &
+  BladeBitRamOptions &
+  BladeBitDiskOptions &
+  BladeBitCudaOptions &
+  MadMaxOptions;
 
 interface CommonDefaults {
   plotterName: string;
@@ -45,10 +58,11 @@ interface CommonDefaults {
 }
 
 interface BladeBitRamDefaults extends CommonDefaults {
-  plotType?: 'ramplot' | 'diskplot';
+  plotType?: 'ramplot' | 'diskplot' | 'cudaplot';
   bladebitWarmStart?: boolean;
   bladebitDisableNUMA?: boolean;
   bladebitNoCpuAffinity?: boolean;
+  bladebitCompressionLevel?: number;
 }
 
 interface BladeBitDiskDefaults extends BladeBitRamDefaults {
@@ -63,6 +77,12 @@ interface BladeBitDiskDefaults extends BladeBitRamDefaults {
   bladebitDiskNoT2Direct?: boolean;
 }
 
+interface BladeBitCudaDefaults extends BladeBitRamDefaults {
+  bladebitDeviceIndex?: number;
+  bladebitEnableDisk128Mode?: boolean;
+  bladebitEnableDisk16Mode?: boolean;
+}
+
 interface MadMaxDefaults extends CommonDefaults {
   madmaxNumBucketsPhase3?: number;
   madmaxThreadMultiplier?: number;
@@ -70,13 +90,18 @@ interface MadMaxDefaults extends CommonDefaults {
   madmaxTempToggle?: boolean;
 }
 
-export type PlotterDefaults = CommonDefaults & BladeBitRamDefaults & BladeBitDiskDefaults & MadMaxDefaults;
+export type PlotterDefaults = CommonDefaults &
+  BladeBitRamDefaults &
+  BladeBitDiskDefaults &
+  BladeBitCudaDefaults &
+  MadMaxDefaults;
 
 type PlotterInstallInfo = {
   version?: string;
   installed: boolean;
   canInstall?: boolean;
   bladebitMemoryWarning?: string;
+  cudaSupport?: boolean;
 };
 
 type Plotter = {

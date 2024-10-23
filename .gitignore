@@ -25,7 +25,7 @@ config/keys.yaml
 config/plots.yaml
 
 # Bundled code
-chia-blockchain.tar.gz.tar.gz
+bpx-beacon-client.tar.gz.tar.gz
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -62,7 +62,7 @@ activate
 .mypy_cache/
 
 # Packaging
-chia-blockchain.tar.gz
+bpx-beacon-client.tar.gz
 
 # Timelord utilities
 vdf_bench
@@ -70,14 +70,8 @@ vdf_bench
 # Node modules
 **/node_modules
 
-# Offer Files
-*.offer
-
 # Backup Files
 *.backup
-
-# Compiled CLVM
-main.sym
 
 # Dev config react
 # src/dev_config.js
@@ -89,7 +83,6 @@ build_scripts/*.Dmg
 packages/**/src/locales/_build
 packages/**/src/locales/**/*.js
 daemon/
-win_code_sign_cert.p12
 
 # testing
 packages/**/playwright-report/index.html

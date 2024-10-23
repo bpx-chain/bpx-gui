@@ -1,4 +1,4 @@
-import { Copy as AssignmentIcon } from '@chia-network/icons';
+import { Copy as AssignmentIcon } from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import { Tooltip, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';

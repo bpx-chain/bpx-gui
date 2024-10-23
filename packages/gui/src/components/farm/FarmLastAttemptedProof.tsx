@@ -1,5 +1,5 @@
-import { useGetFarmingInfoQuery } from '@chia-network/api-react';
-import { Link, Table, Card } from '@chia-network/core';
+import { useGetFarmingInfoQuery } from '@bpx-chain/api-react';
+import { Link, Table, Card } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import moment from 'moment';
 import React from 'react';
@@ -47,12 +47,6 @@ export default function FarmLastAttemptedProof() {
       tooltip={
         <Trans>
           This table shows you the last time your farm attempted to win a block challenge.{' '}
-          <Link
-            target="_blank"
-            href="https://github.com/Chia-Network/chia-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it"
-          >
-            Learn more
-          </Link>
         </Trans>
       }
       transparent

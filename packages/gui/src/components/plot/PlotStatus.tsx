@@ -1,4 +1,4 @@
-import { Flex, Indicator, StateColor, TooltipIcon } from '@chia-network/core';
+import { Flex, Indicator, StateColor, TooltipIcon } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import React from 'react';
 

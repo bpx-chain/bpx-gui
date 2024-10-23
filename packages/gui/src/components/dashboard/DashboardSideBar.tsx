@@ -1,14 +1,10 @@
-import { Flex, SideBarItem } from '@chia-network/core';
+import { Flex, SideBarItem } from '@bpx-chain/core';
 import {
   Farming as FarmingIcon,
-  FullNode as FullNodeIcon,
+  Beacon as BeaconIcon,
   Plots as PlotsIcon,
-  Pooling as PoolingIcon,
-  NFTs as NFTsIcon,
-  Offers as OffersIcon,
-  Tokens as TokensIcon,
   Settings as SettingsIcon,
-} from '@chia-network/icons';
+} from '@bpx-chain/icons';
 import { Trans } from '@lingui/macro';
 import { Box } from '@mui/material';
 import React from 'react';
@@ -46,24 +42,13 @@ export default function DashboardSideBar(props: DashboardSideBarProps) {
     <StyledRoot>
       <StyledItemsContainer>
         <SideBarItem
-          to="/dashboard/wallets"
-          icon={TokensIcon}
-          title={<Trans>Tokens</Trans>}
-          data-testid="DashboardSideBar-tokens"
+          to="/dashboard"
+          icon={BeaconIcon}
+          title={<Trans>Beacon</Trans>}
+          data-testid="DashboardSideBar-beacon"
+          end
         />
-        <SideBarItem
-          to="/dashboard/nfts"
-          icon={NFTsIcon}
-          title={<Trans>NFTs</Trans>}
-          data-testid="DashboardSideBar-nfts"
-        />
-        <SideBarItem
-          to="/dashboard/offers"
-          icon={OffersIcon}
-          title={<Trans>Offers</Trans>}
-          data-testid="DashboardSideBar-offers"
-        />
-
+        
         {!simple && (
           <>
             <Box my={1}>
@@ -71,37 +56,17 @@ export default function DashboardSideBar(props: DashboardSideBarProps) {
             </Box>
 
             <SideBarItem
-              to="/dashboard"
-              icon={FullNodeIcon}
-              title={<Trans>Full Node</Trans>}
-              data-testid="DashboardSideBar-fullnode"
-              end
-            />
-            <SideBarItem
               to="/dashboard/plot"
               icon={PlotsIcon}
               title={<Trans>Plots</Trans>}
               data-testid="DashboardSideBar-plots"
             />
-            {/* }
-            <SideBarItem
-              to="/dashboard/wallets"
-              icon={<WalletIcon fontSize="large" />}
-              title={<Trans>Wallets</Trans>}
-            />
-            */}
 
             <SideBarItem
               to="/dashboard/farm"
               icon={FarmingIcon}
               title={<Trans>Farming</Trans>}
               data-testid="DashboardSideBar-farming"
-            />
-            <SideBarItem
-              to="/dashboard/pool"
-              icon={PoolingIcon}
-              title={<Trans>Pooling</Trans>}
-              data-testid="DashboardSideBar-pooling"
             />
           </>
         )}

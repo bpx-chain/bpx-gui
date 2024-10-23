@@ -1,6 +1,5 @@
-import { fromBech32m } from '@chia-network/api';
-import { useSetRewardTargetsMutation, useGetRewardTargetsQuery } from '@chia-network/api-react';
-import { Button, Flex, Form, TextField, Loading } from '@chia-network/core';
+import { useSetCoinbaseMutation, useGetCoinbaseQuery } from '@bpx-chain/api-react';
+import { Button, Flex, Form, TextField, Loading } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Alert, Dialog, DialogActions, DialogTitle, DialogContent, Typography } from '@mui/material';
 import React, { useMemo, useState, useEffect } from 'react';
@@ -12,8 +11,7 @@ const StyledTextField = styled(TextField)`
 `;
 
 type FormData = {
-  farmerTarget: string;
-  poolTarget: string;
+  coinbase: string;
 };
 
 type Props = {
@@ -23,27 +21,21 @@ type Props = {
 
 export default function FarmManageFarmingRewards(props: Props) {
   const { onClose, open } = props;
-  const [setRewardTargets] = useSetRewardTargetsMutation();
-  const { data, isLoading } = useGetRewardTargetsQuery({
-    searchForPrivateKey: true,
-  });
+  const [setCoinbase] = useSetCoinbaseMutation();
+  const { data, isLoading } = useGetCoinbaseQuery();
 
   const [error, setError] = useState<Error | null>(null);
   const methods = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
-      farmerTarget: data?.farmerTarget ?? '',
-      poolTarget: data?.poolTarget ?? '',
+      coinbase: data?.coinbase ?? '',
     },
   });
-
-  const showWarning = useMemo(() => !data?.haveFarmerSk || !data?.havePoolSk, [data?.haveFarmerSk, data?.havePoolSk]);
 
   useEffect(() => {
     if (data) {
       methods.reset({
-        farmerTarget: data.farmerTarget,
-        poolTarget: data.poolTarget,
+        coinbase: data.coinbase,
       });
     }
   }, [data, methods]);
@@ -64,22 +56,16 @@ export default function FarmManageFarmingRewards(props: Props) {
   }
 
   function checkAddress(stringToCheck: string): boolean {
-    try {
-      fromBech32m(stringToCheck);
-      return true;
-    } catch {
-      return false;
-    }
+    return true;
   }
 
   async function handleSubmit(values: FormData) {
-    const { farmerTarget, poolTarget } = values;
+    const { coinbase } = values;
     setError(null);
 
     try {
-      await setRewardTargets({
-        farmerTarget,
-        poolTarget,
+      await setCoinbase({
+        coinbase,
       }).unwrap();
       handleClose();
     } catch (err) {
@@ -91,7 +77,7 @@ export default function FarmManageFarmingRewards(props: Props) {
     <Dialog onClose={handleDialogClose} maxWidth="lg" aria-labelledby="manage-farming-rewards-title" open={open}>
       <Form methods={methods} onSubmit={handleSubmit}>
         <DialogTitle id="manage-farming-rewards-title">
-          <Trans>Manage Your Farming Rewards Target Addresses</Trans>
+          <Trans>Manage Your Farming Rewards Target Address</Trans>
         </DialogTitle>
         <DialogContent dividers>
           <Flex gap={2} flexDirection="column">
@@ -100,60 +86,26 @@ export default function FarmManageFarmingRewards(props: Props) {
             ) : (
               <>
                 {error && <Alert severity="error">{error.message}</Alert>}
-                {errors.farmerTarget && errors.farmerTarget.type === 'required' && (
+                {errors.coinbase && errors.coinbase.type === 'required' && (
                   <Alert severity="error">
-                    <Trans>Farmer Reward Address must not be empty.</Trans>
+                    <Trans>Reward Address must not be empty.</Trans>
                   </Alert>
                 )}
-                {errors.farmerTarget && errors.farmerTarget.type === 'validate' && (
+                {errors.coinbase && errors.coinbase.type === 'validate' && (
                   <Alert severity="error">
-                    <Trans>Farmer Reward Address is not properly formatted.</Trans>
-                  </Alert>
-                )}
-                {errors.poolTarget && errors.poolTarget.type === 'required' && (
-                  <Alert severity="error">
-                    <Trans>Pool Reward Address must not be empty.</Trans>
-                  </Alert>
-                )}
-                {errors.poolTarget && errors.poolTarget.type === 'validate' && (
-                  <Alert severity="error">
-                    <Trans>Pool Reward Address is not properly formatted.</Trans>
-                  </Alert>
-                )}
-                {showWarning && (
-                  <Alert severity="warning">
-                    <Trans>
-                      No private keys for one or both addresses. Safe only if you are sending rewards to another wallet.
-                    </Trans>
+                    <Trans>Reward Address is not properly formatted.</Trans>
                   </Alert>
                 )}
                 <StyledTextField
-                  label={<Trans>Farmer Reward Address</Trans>}
-                  name="farmerTarget"
+                  label={<Trans>Reward Address</Trans>}
+                  name="coinbase"
                   variant="filled"
                   inputProps={{ spellCheck: false }}
-                  {...register('farmerTarget', {
+                  {...register('coinbase', {
                     required: true,
                     validate: checkAddress,
                   })}
                 />
-                <StyledTextField
-                  label={<Trans>Pool Reward Address</Trans>}
-                  name="poolTarget"
-                  variant="filled"
-                  inputProps={{ spellCheck: false }}
-                  {...register('poolTarget', {
-                    required: true,
-                    validate: checkAddress,
-                  })}
-                />
-
-                <Typography variant="body2" color="textSecondary">
-                  <Trans>
-                    Note that this does not change your pooling payout addresses. This only affects old format plots,
-                    and the 0.25XCH reward for pooling plots.
-                  </Trans>
-                </Typography>
               </>
             )}
           </Flex>

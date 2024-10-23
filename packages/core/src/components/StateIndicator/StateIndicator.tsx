@@ -26,7 +26,7 @@ export type StateComponentProps = {
   hideTitle?: boolean;
 };
 
-export default function StateComponent(props: StateComponentProps) {
+export default function StateComponent(props: StateIndicatorProps) {
   const {
     children,
     state,

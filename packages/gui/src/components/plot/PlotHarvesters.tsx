@@ -1,5 +1,5 @@
-import { useGetHarvestersSummaryQuery } from '@chia-network/api-react';
-import { Loading, Flex } from '@chia-network/core';
+import { useGetHarvestersSummaryQuery } from '@bpx-chain/api-react';
+import { Loading, Flex } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { Typography } from '@mui/material';
 import { orderBy } from 'lodash';

@@ -1,5 +1,11 @@
-import { Daemon, optionsForPlotter, defaultsForPlotter } from '@chia-network/api';
-import type { KeyringStatus, ServiceName, KeyData } from '@chia-network/api';
+import { Daemon, optionsForPlotter, defaultsForPlotter, PlotterName } from '@bpx-chain/api';
+import type {
+    Plotter,
+    PlotterMap,
+    KeyringStatus,
+    ServiceName,
+    KeyData
+} from '@bpx-chain/api';
 
 import api, { baseQuery } from '../api';
 import onCacheEntryAddedInvalidate from '../utils/onCacheEntryAddedInvalidate';
@@ -86,6 +92,44 @@ export const daemonApi = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: () => ['DaemonKey'],
       transformResponse: (response: any) => response?.success,
+    }),
+    
+    generateMnemonic: build.mutation<string[], undefined>({
+      query: () => ({
+        command: 'generateMnemonic',
+        service: Daemon,
+      }),
+      transformResponse: (response: any) => response?.mnemonic,
+    }),
+    
+    deleteKeyByFingerprint: build.mutation<
+      any,
+      {
+        fingerprint: number;
+      }
+    >({
+      query: ({ fingerprint }) => ({
+        command: 'deleteKeyByFingerprint',
+        service: Daemon,
+        args: [fingerprint],
+      }),
+      invalidatesTags: (_result, _error, { fingerprint }) => [
+        { type: 'Keys', id: fingerprint },
+        { type: 'Keys', id: 'LIST' },
+        { type: 'DaemonKey', id: fingerprint },
+        { type: 'DaemonKey', id: 'LIST' },
+      ],
+    }),
+    
+    deleteAllKeys: build.mutation<any, undefined>({
+      query: () => ({
+        command: 'deleteAllKeys',
+        service: Daemon,
+      }),
+      invalidatesTags: [
+        { type: 'Keys', id: 'LIST' },
+        { type: 'DaemonKey', id: 'LIST' },
+      ],
     }),
 
     daemonPing: build.query<boolean, {}>({
@@ -177,72 +221,6 @@ export const daemonApi = apiWithTag.injectEndpoints({
       providesTags: [{ type: 'RunningServices', id: 'LIST' }],
     }),
 
-    setKeyringPassphrase: build.mutation<
-      boolean,
-      {
-        currentPassphrase?: string;
-        newPassphrase?: string;
-        passphraseHint?: string;
-        savePassphrase?: boolean;
-      }
-    >({
-      query: ({ currentPassphrase, newPassphrase, passphraseHint, savePassphrase }) => ({
-        command: 'setKeyringPassphrase',
-        service: Daemon,
-        args: [currentPassphrase, newPassphrase, passphraseHint, savePassphrase],
-      }),
-      invalidatesTags: () => ['KeyringStatus'],
-      transformResponse: (response: any) => response?.success,
-    }),
-
-    removeKeyringPassphrase: build.mutation<
-      boolean,
-      {
-        currentPassphrase: string;
-      }
-    >({
-      query: ({ currentPassphrase }) => ({
-        command: 'removeKeyringPassphrase',
-        service: Daemon,
-        args: [currentPassphrase],
-      }),
-      invalidatesTags: () => ['KeyringStatus'],
-      transformResponse: (response: any) => response?.success,
-    }),
-
-    migrateKeyring: build.mutation<
-      boolean,
-      {
-        passphrase: string;
-        passphraseHint: string;
-        savePassphrase: boolean;
-        cleanupLegacyKeyring: boolean;
-      }
-    >({
-      query: ({ passphrase, passphraseHint, savePassphrase, cleanupLegacyKeyring }) => ({
-        command: 'migrateKeyring',
-        service: Daemon,
-        args: [passphrase, passphraseHint, savePassphrase, cleanupLegacyKeyring],
-      }),
-      invalidatesTags: () => ['KeyringStatus'],
-      transformResponse: (response: any) => response?.success,
-    }),
-
-    unlockKeyring: build.mutation<
-      boolean,
-      {
-        key: string;
-      }
-    >({
-      query: ({ key }) => ({
-        command: 'unlockKeyring',
-        service: Daemon,
-        args: [key],
-      }),
-      invalidatesTags: () => ['KeyringStatus'],
-      transformResponse: (response: any) => response?.success,
-    }),
-
     getPlotters: build.query<Object, undefined>({
       query: () => ({
         command: 'getPlotters',
@@ -260,6 +238,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
             installed,
             canInstall,
             bladebitMemoryWarning,
+            cudaSupport,
           } = plotters[plotterName];
 
           if (!plotterName.startsWith('bladebit')) {
@@ -279,43 +258,58 @@ export const daemonApi = apiWithTag.injectEndpoints({
 
           // if (plotterName.startsWith('bladebit'))
           const majorVersion = typeof version === 'string' ? +version.split('.')[0] : 0;
-          if (majorVersion > 1) {
-            const bbDisk = 'bladebit_disk';
-            availablePlotters[bbDisk] = {
+          if (majorVersion <= 1) {
+            const bbRam = PlotterName.BLADEBIT_RAM;
+            availablePlotters[bbRam] = {
               displayName,
-              version: `${version} (Disk plot)`,
-              options: optionsForPlotter(bbDisk),
-              defaults: defaultsForPlotter(bbDisk),
+              version: typeof version === 'string' ? `${version} (RAM plot)` : version,
+              options: optionsForPlotter(bbRam),
+              defaults: defaultsForPlotter(bbRam),
               installInfo: {
                 installed,
                 canInstall,
                 bladebitMemoryWarning,
               },
             };
+            return;
+          }
+          const bbDisk = PlotterName.BLADEBIT_DISK;
+          availablePlotters[bbDisk] = {
+            displayName,
+            version: `${version} (Disk plot)`,
+            options: optionsForPlotter(bbDisk),
+            defaults: defaultsForPlotter(bbDisk),
+            installInfo: {
+              installed,
+              canInstall,
+              bladebitMemoryWarning,
+            },
+          };
 
-            const bbRam = 'bladebit_ram';
-            availablePlotters[bbRam] = {
+          const bbRam = PlotterName.BLADEBIT_RAM;
+          availablePlotters[bbRam] = {
+            displayName,
+            version: `${version} (RAM plot)`,
+            options: optionsForPlotter(bbRam),
+            defaults: defaultsForPlotter(bbRam),
+            installInfo: {
+              installed,
+              canInstall,
+              bladebitMemoryWarning,
+            },
+          };
+          if (cudaSupport) {
+            const bbCuda = PlotterName.BLADEBIT_CUDA;
+            availablePlotters[bbCuda] = {
               displayName,
-              version: `${version} (RAM plot)`,
-              options: optionsForPlotter(bbRam),
-              defaults: defaultsForPlotter(bbRam),
+              version: `${version} (CUDA plot)`,
+              options: optionsForPlotter(bbCuda),
+              defaults: defaultsForPlotter(bbCuda),
               installInfo: {
                 installed,
                 canInstall,
                 bladebitMemoryWarning,
-              },
-            };
-          } else {
-            const bbRam = 'bladebit_ram';
-            availablePlotters[bbRam] = {
-              displayName,
-              version: `${version} (RAM plot)`,
-              options: optionsForPlotter(bbRam),
-              defaults: defaultsForPlotter(bbRam),
-              installInfo: {
-                installed: false,
-                canInstall: false,
-                bladebitMemoryWarning,
+                cudaSupport,
               },
             };
           }
@@ -323,7 +317,6 @@ export const daemonApi = apiWithTag.injectEndpoints({
 
         return availablePlotters;
       },
-      // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
     }),
 
     stopPlotting: build.mutation<
@@ -340,83 +333,17 @@ export const daemonApi = apiWithTag.injectEndpoints({
       transformResponse: (response: any) => response?.success,
       // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
     }),
-    startPlotting: build.mutation<boolean, PlotAdd>({
-      query: ({
-        bladebitDisableNUMA,
-        bladebitWarmStart,
-        bladebitNoCpuAffinity,
-        bladebitDiskCache,
-        bladebitDiskF1Threads,
-        bladebitDiskFpThreads,
-        bladebitDiskCThreads,
-        bladebitDiskP2Threads,
-        bladebitDiskP3Threads,
-        bladebitDiskAlternate,
-        bladebitDiskNoT1Direct,
-        bladebitDiskNoT2Direct,
-        c,
-        delay,
-        disableBitfieldPlotting,
-        excludeFinalDir,
-        farmerPublicKey,
-        finalLocation,
-        fingerprint,
-        madmaxNumBucketsPhase3,
-        madmaxTempToggle,
-        madmaxThreadMultiplier,
-        maxRam,
-        numBuckets,
-        numThreads,
-        overrideK,
-        parallel,
-        plotCount,
-        plotSize,
-        plotterName,
-        plotType,
-        poolPublicKey,
-        queue,
-        workspaceLocation,
-        workspaceLocation2,
-      }) => ({
+    
+    startPlotting: build.mutation<
+      boolean,
+      {
+        plotAddConfig: PlotAdd;
+      }
+    >({
+      query: ({ plotAddConfig }) => ({
         command: 'startPlotting',
         service: Daemon,
-        args: [
-          plotterName,
-          plotSize,
-          plotCount,
-          workspaceLocation,
-          workspaceLocation2 || workspaceLocation,
-          finalLocation,
-          maxRam,
-          numBuckets,
-          numThreads,
-          queue,
-          fingerprint,
-          parallel,
-          delay,
-          disableBitfieldPlotting,
-          excludeFinalDir,
-          overrideK,
-          farmerPublicKey,
-          poolPublicKey,
-          c,
-          madmaxNumBucketsPhase3,
-          madmaxTempToggle,
-          madmaxThreadMultiplier,
-          plotType,
-          bladebitDisableNUMA,
-          bladebitWarmStart,
-          bladebitNoCpuAffinity,
-          bladebitDiskCache,
-          bladebitDiskF1Threads,
-          bladebitDiskFpThreads,
-          bladebitDiskCThreads,
-          bladebitDiskP2Threads,
-          bladebitDiskP3Threads,
-          bladebitDiskAlternate,
-          bladebitDiskNoT1Direct,
-          bladebitDiskNoT2Direct,
-        ],
+        args: [plotAddConfig],
       }),
       transformResponse: (response: any) => response?.success,
       // providesTags: (_result, _err, { service }) => [{ type: 'ServiceRunning', id: service }],
@@ -438,10 +365,6 @@ export const {
   useStopServiceMutation,
   useIsServiceRunningQuery,
   useRunningServicesQuery,
-  useSetKeyringPassphraseMutation,
-  useRemoveKeyringPassphraseMutation,
-  useMigrateKeyringMutation,
-  useUnlockKeyringMutation,
   useGetVersionQuery,
 
   useGetPlottersQuery,
@@ -453,4 +376,7 @@ export const {
   useGetKeysQuery,
   useSetLabelMutation,
   useDeleteLabelMutation,
+  useGenerateMnemonicMutation,
+  useDeleteKeyByFingerprintMutation,
+  useDeleteAllKeysMutation,
 } = daemonApi;

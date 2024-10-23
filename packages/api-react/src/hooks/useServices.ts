@@ -1,4 +1,4 @@
-import { ServiceName } from '@chia-network/api';
+import { ServiceName } from '@bpx-chain/api';
 
 import useService, { ServiceState } from './useService';
 
@@ -44,15 +44,12 @@ export default function useMonitorServices(
   stopping: ServiceName[];
   running: ServiceName[];
 } {
-  const walletState = useService(ServiceName.WALLET, getServiceOptions(ServiceName.WALLET, services, options));
 
-  const fullNodeState = useService(ServiceName.FULL_NODE, getServiceOptions(ServiceName.FULL_NODE, services, options));
+  const beaconState = useService(ServiceName.BEACON, getServiceOptions(ServiceName.BEACON, services, options));
 
   const farmerState = useService(ServiceName.FARMER, getServiceOptions(ServiceName.FARMER, services, options));
 
   const harvesterState = useService(ServiceName.HARVESTER, getServiceOptions(ServiceName.HARVESTER, services, options));
-
-  const simulatorState = useService(ServiceName.SIMULATOR, getServiceOptions(ServiceName.SIMULATOR, services, options));
 
   const plotterState = useService(ServiceName.PLOTTER, getServiceOptions(ServiceName.PLOTTER, services, options));
 
@@ -63,24 +60,13 @@ export default function useMonitorServices(
     getServiceOptions(ServiceName.INTRODUCER, services, options)
   );
 
-  const datalayerState = useService(ServiceName.DATALAYER, getServiceOptions(ServiceName.DATALAYER, services, options));
-
-  const datalayerServerState = useService(ServiceName.DATALAYER_SERVER, {
-    ...getServiceOptions(ServiceName.DATALAYER_SERVER, services, options),
-    disableWait: true,
-  });
-
   const states = [
-    walletState,
-    fullNodeState,
+    beaconState,
     farmerState,
     harvesterState,
-    simulatorState,
     plotterState,
     timelordState,
     introducerState,
-    datalayerState,
-    datalayerServerState,
   ];
 
   const isLoading = !!states.find((state) => state.isLoading);

@@ -1,5 +1,5 @@
-import { useStopPlottingMutation } from '@chia-network/api-react';
-import { ConfirmDialog, More, MenuItem, useOpenDialog } from '@chia-network/core';
+import { useStopPlottingMutation } from '@bpx-chain/api-react';
+import { ConfirmDialog, More, MenuItem, useOpenDialog } from '@bpx-chain/core';
 import { Trans } from '@lingui/macro';
 import { DeleteForever as DeleteForeverIcon, Info as InfoIcon } from '@mui/icons-material';
 import { Divider, ListItemIcon, Typography } from '@mui/material';

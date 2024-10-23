@@ -1,4 +1,4 @@
-import { usePrefs } from '@chia-network/api-react';
+import { usePrefs } from '@bpx-chain/api-react';
 import React, { createContext, ReactNode, useState, useMemo, useCallback } from 'react';
 
 import Mode from '../../constants/Mode';
@@ -7,7 +7,7 @@ export const ModeContext = createContext<{
   mode?: Mode;
   setMode: (mode: Mode) => void;
 }>({
-  mode: Mode.WALLET,
+  mode: Mode.NODE,
   setMode: () => {
     throw new Error('ModeProvider not found. Please wrap your app in a <ModeProvider>.');
   },

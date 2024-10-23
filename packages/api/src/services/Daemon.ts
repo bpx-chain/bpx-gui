@@ -78,44 +78,26 @@ export default class Daemon extends Service {
       fingerprint,
     });
   }
+  
+  async generateMnemonic(): Promise<{
+    mnemonic: string[];
+    success: boolean;
+  }> {
+    return this.command('generate_mnemonic');
+  }
+  
+  async deleteKeyByFingerprint(fingerprint: string) {
+    return this.command('delete_key_by_fingerprint', {
+      fingerprint,
+    });
+  }
+  
+  async deleteAllKeys() {
+    return this.command('delete_all_keys');
+  }
 
   keyringStatus() {
     return this.command('keyring_status');
-  }
-
-  setKeyringPassphrase(
-    currentPassphrase?: string | null,
-    newPassphrase?: string,
-    passphraseHint?: string,
-    savePassphrase?: boolean
-  ) {
-    return this.command('set_keyring_passphrase', {
-      currentPassphrase,
-      newPassphrase,
-      passphraseHint,
-      savePassphrase,
-    });
-  }
-
-  removeKeyringPassphrase(currentPassphrase: string) {
-    return this.command('remove_keyring_passphrase', {
-      currentPassphrase,
-    });
-  }
-
-  migrateKeyring(passphrase: string, passphraseHint: string, savePassphrase: boolean, cleanupLegacyKeyring: boolean) {
-    return this.command('migrate_keyring', {
-      passphrase,
-      passphraseHint,
-      savePassphrase,
-      cleanupLegacyKeyring,
-    });
-  }
-
-  unlockKeyring(key: string) {
-    return this.command('unlock_keyring', {
-      key,
-    });
   }
 
   getPlotters() {
@@ -129,100 +111,105 @@ export default class Daemon extends Service {
     });
   }
 
-  startPlotting(
-    plotterName: string, // plotterName
-    k: number, // plotSize
-    n: number, // plotCount
-    t: string, // workspaceLocation
-    t2: string, // workspaceLocation2
-    d: string, // finalLocation
-    b: number, // maxRam
-    u: number, // numBuckets
-    r: number, // numThreads,
-    queue: string, // queue
-    a: number | undefined, // fingerprint
-    parallel: boolean, // parallel
-    delay: number, // delay
-    e?: boolean, // disableBitfieldPlotting
-    x?: boolean, // excludeFinalDir
-    overrideK?: boolean, // overrideK
-    f?: string, // farmerPublicKey
-    p?: string, // poolPublicKey
-    c?: string, // poolContractAddress
-    mm_v?: number, // madmaxNumBucketsPhase3,
-    mm_G?: boolean, // madmaxTempToggle,
-    mm_K?: number, // madmaxThreadMultiplier,
-    plot_type?: string, // 'diskplot' or 'ramplot'
-    bb_disable_numa?: boolean, // bladebitDisableNUMA,
-    bb_warm_start?: boolean, // bladebitWarmStart,
-    bb_no_cpu_affinity?: boolean, // bladebitNoCpuAffinity
-    bbdisk_cache?: number, // bladebitDiskCache
-    bbdisk_f1_threads?: number, // bladebitDiskF1Threads
-    bbdisk_fp_threads?: number, // bladebitDiskFpThreads
-    bbdisk_c_threads?: number, // bladebitDiskCThreads
-    bbdisk_p2_threads?: number, // bladebitDiskP2Threads
-    bbdisk_p3_threads?: number, // bladebitDiskP3Threads
-    bbdisk_alternate?: boolean, // bladebitDiskAlternate
-    bbdisk_no_t1_direct?: boolean, // bladebitDiskNoT1Direct
-    bbdisk_no_t2_direct?: boolean // bladebitDiskNoT2Direct
-  ) {
-    const args: Record<string, unknown> = {
-      service: ServiceName.PLOTTER,
-      plotter: plotterName.startsWith('bladebit') ? 'bladebit' : plotterName,
-      k,
-      n,
-      t,
-      t2,
-      d,
-      b,
-      u,
-      r,
-      queue,
-      parallel,
-      delay,
-      e,
-      x,
-      overrideK,
+  startPlotting(inputArgs: {
+    bladebitDisableNUMA?: boolean;
+    bladebitWarmStart?: boolean;
+    bladebitNoCpuAffinity?: boolean;
+    bladebitCompressionLevel?: number;
+    bladebitDiskCache?: number;
+    bladebitDiskF1Threads?: number;
+    bladebitDiskFpThreads?: number;
+    bladebitDiskCThreads?: number;
+    bladebitDiskP2Threads?: number;
+    bladebitDiskP3Threads?: number;
+    bladebitDiskAlternate?: boolean;
+    bladebitDiskNoT1Direct?: boolean;
+    bladebitDiskNoT2Direct?: boolean;
+    bladebitDeviceIndex?: number;
+    bladebitEnableDisk128Mode?: boolean;
+    bladebitEnableDisk16Mode?: boolean;
+    delay: number;
+    disableBitfieldPlotting?: boolean;
+    excludeFinalDir?: boolean;
+    farmerPublicKey?: string;
+    finalLocation: string;
+    fingerprint?: number;
+    madmaxNumBucketsPhase3?: number;
+    madmaxTempToggle?: boolean;
+    madmaxThreadMultiplier?: number;
+    maxRam: number;
+    numBuckets: number;
+    numThreads: number;
+    overrideK?: boolean;
+    parallel: boolean;
+    plotCount: number;
+    plotSize: number;
+    plotterName: string;
+    plotType?: string;
+    poolPublicKey?: string;
+    queue: string;
+    workspaceLocation: string;
+    workspaceLocation2: string;
+  }) {
+    const conversionDict: Record<string, string> = {
+      bladebitDisableNUMA: 'm',
+      bladebitWarmStart: 'w',
+      bladebitNoCpuAffinity: 'no_cpu_affinity',
+      bladebitCompressionLevel: 'compress',
+      bladebitDiskCache: 'cache',
+      bladebitDiskF1Threads: 'f1_threads',
+      bladebitDiskFpThreads: 'fp_threads',
+      bladebitDiskCThreads: 'c_threads',
+      bladebitDiskP2Threads: 'p2_threads',
+      bladebitDiskP3Threads: 'p3_threads',
+      bladebitDiskAlternate: 'alternate',
+      bladebitDiskNoT1Direct: 'no_t1_direct',
+      bladebitDiskNoT2Direct: 'no_t2_direct',
+      bladebitDeviceIndex: 'device',
+      bladebitEnableDisk128Mode: 'disk_128',
+      bladebitEnableDisk16Mode: 'disk_16',
+      disableBitfieldPlotting: 'e',
+      excludeFinalDir: 'x',
+      farmerPublicKey: 'f',
+      finalLocation: 'd',
+      madmaxNumBucketsPhase3: 'v',
+      madmaxTempToggle: 'G',
+      madmaxThreadMultiplier: 'K',
+      maxRam: 'b',
+      numBuckets: 'u',
+      numThreads: 'r',
+      plotCount: 'n',
+      plotSize: 'k',
+      plotterName: 'plotter',
+      plotType: 'plot_type',
+      poolPublicKey: 'p',
+      workspaceLocation: 't',
+      workspaceLocation2: 't2',
     };
 
-    if (a) args.a = a;
-    if (f) args.f = f;
-    if (p) args.p = p;
-    if (c) args.c = c;
-    // madmaxNumBucketsPhase3
-    if (mm_v) args.v = mm_v;
-    // madmaxTempToggle
-    if (mm_G) args.G = mm_G;
-    // madmaxThreadMultiplier
-    if (mm_K) args.K = mm_K;
-    // 'ramplot' or 'diskplot'
-    if (plot_type) args.plot_type = plot_type;
-    // bladebitDisableNUMA
-    if (bb_disable_numa) args.m = bb_disable_numa;
-    // bladebitWarmStart
-    if (bb_warm_start) args.w = bb_warm_start;
-    // bladebitNoCpuAffinity
-    if (bb_no_cpu_affinity) args.no_cpu_affinity = bb_no_cpu_affinity;
-    // bladebitDiskCache
-    if (bbdisk_cache) args.cache = `${bbdisk_cache}G`;
-    // bladebitDiskF1Threads
-    if (bbdisk_f1_threads) args.f1_threads = bbdisk_f1_threads;
-    // bladebitDiskFpThreads
-    if (bbdisk_fp_threads) args.fp_threads = bbdisk_fp_threads;
-    // bladebitDiskCThreads
-    if (bbdisk_c_threads) args.c_threads = bbdisk_c_threads;
-    // bladebitDiskP2Threads
-    if (bbdisk_p2_threads) args.p2_threads = bbdisk_p2_threads;
-    // bladebitDiskP3Threads
-    if (bbdisk_p3_threads) args.p3_threads = bbdisk_p3_threads;
-    // bladebitDiskAlternate
-    if (bbdisk_alternate) args.alternate = bbdisk_alternate;
-    // bladebitDiskNoT1Direct
-    if (bbdisk_no_t1_direct) args.no_t1_direct = bbdisk_no_t1_direct;
-    // bladebitDiskNoT2Direct
-    if (bbdisk_no_t2_direct) args.no_t2_direct = bbdisk_no_t2_direct;
+    const outputArgs: Record<string, unknown> = { service: ServiceName.PLOTTER };
 
-    return this.command('start_plotting', args, undefined, undefined, true);
+    Object.keys(inputArgs).forEach((key) => {
+      if (conversionDict[key]) outputArgs[conversionDict[key]] = inputArgs[key as keyof typeof inputArgs];
+      else outputArgs[key] = inputArgs[key as keyof typeof inputArgs];
+    });
+
+    if (outputArgs.plotter && (outputArgs.plotter as string).startsWith('bladebit')) outputArgs.plotter = 'bladebit';
+    if (outputArgs.cache) outputArgs.cache = `${outputArgs.cache}G`;
+
+    Object.keys(outputArgs).forEach((key) => {
+      if (outputArgs[key] === undefined) delete outputArgs[key];
+      // if (outputArgs[key] === '') delete outputArgs[key];
+    });
+
+    // some keys must be provided as empty strings and some must not be provided at all
+    if (outputArgs.p === '') delete outputArgs.p;
+    if (outputArgs.t === '') delete outputArgs.t;
+    if (outputArgs.t2 === '') delete outputArgs.t2;
+
+    delete outputArgs.fingerprint; // Use farmer + pool pk instead
+
+    return this.command('start_plotting', outputArgs, undefined, undefined, true);
   }
 
   exit() {

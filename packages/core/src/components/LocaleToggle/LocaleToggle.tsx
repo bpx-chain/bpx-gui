@@ -5,7 +5,6 @@ import React, { useContext, useMemo } from 'react';
 import { useToggle } from 'react-use';
 
 import useLocale from '../../hooks/useLocale';
-import useOpenExternal from '../../hooks/useOpenExternal';
 import Button from '../Button';
 import { LocaleContext } from '../LocaleProvider';
 
@@ -14,7 +13,6 @@ export default function LocaleToggle(props) {
   const { locales } = useContext(LocaleContext);
   const [currentLocale, setLocale] = useLocale();
   const [open, toggleOpen] = useToggle(false);
-  const openExternal = useOpenExternal();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -31,12 +29,6 @@ export default function LocaleToggle(props) {
   function handleSelect(locale: string) {
     setLocale(locale);
     toggleOpen();
-  }
-
-  function handleHelpTranslate() {
-    handleClose();
-
-    openExternal('https://github.com/Chia-Network/chia-blockchain-gui/tree/main/src/locales/README.md');
   }
 
   const localeData = useMemo(() => locales.find((item) => item.locale === currentLocale), [currentLocale, locales]);
@@ -57,10 +49,6 @@ export default function LocaleToggle(props) {
         {currentLocaleLabel}
       </Button>
       <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        <MenuItem onClick={handleHelpTranslate}>
-          <Trans>Help translate</Trans>
-        </MenuItem>
-        <Divider />
         {locales.map((item) => (
           <MenuItem
             key={item.locale}
